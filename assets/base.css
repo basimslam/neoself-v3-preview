@@ -1,0 +1,1111 @@
+/* ============================================================
+   NEOSELF — base
+   ============================================================
+
+   Two rules govern everything here:
+
+   1. Structure is carried by 1px hairlines, never shadows.
+   2. The type scale is spent on the wordmark and the data. Section
+      headings are deliberately suppressed so clinical figures dominate
+      by default. Bader's trick is not that their numbers are big — it
+      is that nothing else is.
+   ============================================================ */
+
+/* ---- Fonts -------------------------------------------------
+   Geist descends from Univers, Suisse International and ABC Diatype —
+   the Swiss lineage the brand deck asks for. OFL, self-hosted,
+   subset to Latin + ₹ by tools/subset-fonts.sh (141KB → 49KB).
+
+   Sans carries prose. Mono carries facts, and only facts.
+   ------------------------------------------------------------ */
+
+@font-face {
+  font-family: 'Geist Sans';
+  src: url('geist-sans.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* v3: one real bold weight (700). The base build banned bold; v3 wants
+   Rhode-scale confidence, so a genuine Bold face is loaded, not synthesised. */
+@font-face {
+  font-family: 'Geist Sans';
+  src: url('geist-sans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('geist-mono.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- Tokens ------------------------------------------------ */
+
+/* Named for the brand deck's own swatches, so the code and the guidelines say
+   the same words. Anodized Steel and Brushed Silver are cold, machined metal —
+   the values follow the names.
+
+   Note this deliberately departs from the premium reference set, where every
+   neutral is warm-shifted (Bader's "clinical" grey is pink-cast). That finding
+   came from women's and unisex skincare. This is a men's brand, and Indian
+   men's grooming is uniformly charcoal-and-navy — cool near-white against that
+   is still the quiet one in the room, without pretending to be warm. */
+:root {
+  --ink: #1a1a1a;
+  --paper: #f4f5f6;
+  --surface: #e8eaec; /* evidence ground — never decoration */
+  --silver: #d5d9db; /* Brushed Silver — every hairline on the site */
+  --steel: #676c70; /* Anodized Steel — secondary text */
+
+  --sans: 'Geist Sans', system-ui, -apple-system, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+
+  --gutter: 24px;
+  --container: 1440px;
+  --rhythm: 56px;
+
+  --dur: 240ms;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* Media radius. Zero: reverted.
+     The evidence always said zero — five of the six premium references
+     hard-corner all media, and the exception is Rhode, which the teardown ruled
+     out on register. It was rounded briefly on request and reverted after
+     seeing it.
+     Still a token rather than a literal, so it stays ONE decision and one line
+     to flip. That is what made this revert trivial. */
+  --radius-media: 22px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 32px;
+    --rhythm: 80px;
+  }
+}
+
+/* ---- Reset ------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ---- Type scale --------------------------------------------
+   No clamp(). Hard breakpoint jumps, as every premium reference does.
+   ------------------------------------------------------------ */
+
+.t-hero {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+}
+
+.t-heading {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.t-figure {
+  font-family: var(--sans);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
+
+.t-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.t-data-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--steel);
+}
+
+.t-mono {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.t-body-sm {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.t-muted {
+  color: var(--steel);
+}
+
+@media (min-width: 768px) {
+  .t-hero {
+    font-size: 72px;
+  }
+  .t-heading {
+    font-size: 28px;
+  }
+  .t-figure {
+    font-size: 64px;
+  }
+}
+
+/* ---- Primitives -------------------------------------------- */
+
+.container {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.prose {
+  max-width: 65ch;
+}
+
+.section {
+  padding-block: var(--rhythm);
+}
+
+/* Structure is hairlines, never shadows. */
+.rule-top {
+  border-top: 1px solid var(--silver);
+}
+.rule-bottom {
+  border-bottom: 1px solid var(--silver);
+}
+
+.surface-evidence {
+  background: var(--surface);
+}
+
+.pill {
+  display: inline-block;
+  border: 1px solid var(--ink);
+  border-radius: 9999px;
+  padding: 15px 34px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1;
+  transition:
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.pill:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.pill--solid {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.pill--solid:hover {
+  background: transparent;
+  color: var(--ink);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================
+   SNIPPET STYLES
+   ============================================================
+   These live here, not in a section's {% stylesheet %}, for a reason
+   Shopify enforces: {% stylesheet %} is only valid in SECTION files.
+   A snippet's CSS has no home in a section, and putting it in one
+   breaks the moment the snippet is used on a page that section is not
+   on — which is exactly what happened when the PDP rendered
+   spec-table and reviews-list with no styles at all.
+
+   tests/theme/architecture.test.js enforces this.
+   ============================================================ */
+
+/* ---- Evidence figure ---------------------------------------
+   The one place the scale opens up. `n` and duration always ride
+   with the number — a figure without them is a marketing claim.
+   ------------------------------------------------------------ */
+
+/* v3: each figure is a bold rounded stat card (paper on the grey evidence
+   ground), not a bare number on a hairline grid. */
+.clinical-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--paper);
+  border-radius: var(--radius-media);
+  padding: 32px 28px 28px;
+  justify-content: space-between;
+  min-height: 200px;
+}
+
+.clinical-figure .t-figure {
+  font-size: 60px;
+}
+
+.clinical-figure__caption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+@media (min-width: 768px) {
+  .clinical-figure .t-figure {
+    font-size: 76px;
+  }
+}
+
+/* ---- Product card ------------------------------------------ */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.card__link {
+  display: block;
+}
+
+/* Add-to-cart: a compact pill in the top-right corner, clear of the name and
+   price at the foot. Appears on hover (always visible on touch). Clicking fills
+   the whole card with a smooth confirmation that grows from the pill's corner. */
+.card__atc {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 9999px;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  white-space: nowrap;
+  transition:
+    opacity 260ms var(--ease),
+    transform 260ms var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card__atc {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+
+  .card:hover .card__atc {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The confirmation fills the card, growing from the pill's corner. */
+.card__fill {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius-media);
+  display: grid;
+  place-items: center;
+  transform: scale(0);
+  transform-origin: top right;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 520ms var(--ease),
+    opacity 300ms var(--ease);
+}
+
+.card__fill-text {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  text-transform: lowercase;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 280ms var(--ease),
+    transform 280ms var(--ease);
+}
+
+.card.is-added .card__atc {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.card.is-added .card__fill {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.card.is-added .card__fill-text {
+  opacity: 1;
+  transform: none;
+  transition-delay: 260ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card__atc,
+  .card__fill,
+  .card__fill-text {
+    transition: none;
+  }
+}
+
+.card__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: var(--surface);
+  overflow: hidden;
+  border-radius: var(--radius-media);
+  margin-bottom: 0;
+}
+
+.card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 700ms var(--ease);
+}
+
+.card:hover .card__media img {
+  transform: scale(1.03);
+}
+
+/* Hover: the still becomes the product in use.
+
+   Declared ONLY inside @media (hover: hover), and that is load-bearing: a
+   browser never fetches a background-image from a media query that does not
+   match. Measured — a phone fetches NONE of these. Not hidden, absent. ~70% of
+   the traffic pays nothing for a gesture it cannot make, and an <img> could not
+   do that (it downloads everywhere, display:none included).
+
+   On desktop they DO load eagerly rather than on hover — measured, all three
+   arrive with the page. opacity:0 defers nothing. That is the accepted trade:
+   backgrounds fetch at low priority after layout so they never compete with the
+   LCP image, desktop is the better-connected third of the traffic, and hover
+   lands instantly instead of flashing a half-loaded frame. Deferring to the
+   hover itself would mean putting back the JavaScript this replaced.
+
+   Cost: zero JS. The <video> version needed 618 bytes of it. */
+.card__hover {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card__hover {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background-image: var(--hover-src);
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 480ms var(--ease);
+  }
+
+  .card[data-card-hover]:hover .card__hover {
+    opacity: 1;
+  }
+
+  /* The still stops scaling once the model takes over — two motions at once
+     reads as a slideshow, not a product. */
+  .card[data-card-hover]:hover .card__media img {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card__hover {
+    transition: none;
+  }
+}
+
+/* v3: the name sits large OVER the image, Rhode-style, always visible. A scrim
+   at the foot carries it over both the light product still and the darker
+   product-in-use shot on hover. */
+/* Strong enough that the white name/price pass AA even over a light product
+   still (the delivered shots sit on pale marble). */
+.card__scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgb(16 17 18 / 0.85) 0%,
+    rgb(16 17 18 / 0.62) 20%,
+    rgb(16 17 18 / 0.22) 42%,
+    rgb(16 17 18 / 0) 64%
+  );
+}
+
+.card__info {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 20px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  color: var(--paper);
+  pointer-events: none;
+}
+
+.card__name {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  text-transform: lowercase;
+}
+
+.card__info .card__price {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--paper);
+  opacity: 0.92;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .card__name {
+    font-size: 56px;
+  }
+}
+
+/* The big "drag" cursor that follows the mouse over the carousel (theme.js sets
+   its position). Mouse only; touch swipes directly. */
+.drag-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: rgb(26 26 26 / 0.34);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  border: 1px solid rgb(255 255 255 / 0.4);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: lowercase;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.3);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 220ms var(--ease);
+  will-change: transform;
+}
+
+.drag-cursor.is-on {
+  opacity: 1;
+}
+
+/* ---- Spec table -------------------------------------------- */
+
+/* v3: the spec is a rounded surface card, not a hairline table. */
+.spec {
+  margin: 0;
+  background: var(--surface);
+  border-radius: var(--radius-media);
+  overflow: hidden;
+  padding-inline: 28px;
+}
+
+.spec__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  padding-block: 18px;
+  border-bottom: 1px solid rgb(26 26 26 / 0.08);
+}
+
+.spec__row:last-child {
+  border-bottom: none;
+}
+
+.spec__value {
+  margin: 0;
+  font-size: 14px;
+}
+
+.spec__sep {
+  color: var(--silver);
+  margin-inline: 8px;
+}
+
+.spec__inci {
+  line-height: 1.55;
+}
+
+/* The conflict list gets weight the other rows do not. Telling someone
+   when not to buy is the most credible thing on the page; it should not
+   read as fine print. */
+.spec__row--conflict {
+  background: var(--paper);
+  margin-inline: -28px;
+  padding-inline: 28px;
+}
+
+.spec__conflicts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.spec__conflicts li::before {
+  content: '—';
+  color: var(--steel);
+  margin-right: 8px;
+}
+
+@media (min-width: 768px) {
+  .spec__row {
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+    align-items: baseline;
+  }
+
+  .spec__row--block {
+    align-items: start;
+  }
+}
+
+/* ---- Reviews ----------------------------------------------- */
+
+.reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.reviews__summary {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 32px;
+  background: var(--surface);
+  border-radius: var(--radius-media);
+}
+
+.reviews__score {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.reviews__avg {
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.reviews__dist {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 320px;
+  margin: 0;
+}
+
+.reviews__dist-row {
+  display: grid;
+  grid-template-columns: 12px 1fr 28px;
+  align-items: center;
+  gap: 10px;
+}
+
+.reviews__dist-row dd {
+  margin: 0;
+}
+
+/* The distribution bar is the 1px hairline given a third job — a
+   titration scale rather than a chart. */
+.reviews__bar {
+  height: 1px;
+  background: var(--silver);
+  position: relative;
+}
+
+.reviews__bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  height: 3px;
+  top: -1px;
+  background: var(--ink);
+}
+
+.reviews__dist-n {
+  text-align: right;
+}
+
+.reviews__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviews__filter-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviews__filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reviews__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  border: 1px solid var(--silver);
+  border-radius: 9999px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--steel);
+  transition:
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease);
+}
+
+.chip:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.chip.is-active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.reviews__list {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1fr;
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 24px;
+  border-top: 1px solid var(--silver);
+}
+
+.review__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.review__stars {
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+.review__verified {
+  color: var(--steel);
+}
+
+.review__body {
+  max-width: 62ch;
+  font-size: 15px;
+}
+
+.reviews__policy {
+  padding-top: 28px;
+  border-top: 1px solid var(--silver);
+  max-width: 70ch;
+}
+
+@media (min-width: 768px) {
+  .reviews__summary {
+    flex-direction: row;
+    align-items: center;
+    gap: 64px;
+  }
+
+  .reviews__filter-groups {
+    flex-direction: row;
+    gap: 48px;
+  }
+
+  .reviews__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 48px;
+  }
+}
+
+/* ---- Product gallery --------------------------------------- */
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Square on mobile, 4:5 on desktop.
+   Measured: a 4:5 gallery put the add-to-cart at y=821 on a 360x800 Redmi —
+   below the fold, on the exact device this store is built for. ATC above the
+   fold is universal across all six premium references, and the mobile drawer is
+   a safety net, not a substitute for the button being reachable. Square buys
+   ~78px and lands it clear. */
+.gallery__main {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--surface);
+  overflow: hidden;
+  border-radius: var(--radius-media);
+}
+
+@media (min-width: 768px) {
+  .gallery__main {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+.gallery__frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+  pointer-events: none;
+}
+
+.gallery__frame.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Contain the morph. Without this the travelling snapshot can paint
+   outside the gallery box mid-flight. */
+.gallery__main {
+  contain: paint;
+}
+
+.gallery__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* All thumbs visible, no carousel. 76% of mobile sites hide additional
+   images behind a swipe; beauty is the second most visually driven
+   vertical Baymard has studied. */
+.gallery__thumbs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gallery__thumb {
+  aspect-ratio: 4 / 5;
+  background: var(--surface);
+  border: 1px solid transparent;
+  border-radius: calc(var(--radius-media) / 2);
+  transition: border-color var(--dur) var(--ease);
+  overflow: hidden;
+}
+
+.gallery__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery__thumb.is-active {
+  border-color: var(--ink);
+}
+
+/* ---- Motion ------------------------------------------------
+   Hover only. No scroll-reveal anywhere — not one of the six
+   premium references has it.
+   ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---- View transitions --------------------------------------
+   Shopify is a multi-page app, and this is the API built for that:
+   the browser morphs elements shared between two real page loads.
+   No SPA router, no app, no framework.
+
+   The product image travels; everything else crossfades fast enough
+   to read as the page arriving around it rather than as an effect.
+   Unsupported browsers get an ordinary navigation.
+   ------------------------------------------------------------ */
+
+@view-transition {
+  navigation: auto;
+}
+
+/* The page itself: quick, almost subliminal. If you notice this
+   crossfade it is too slow. */
+::view-transition-old(root) {
+  animation-duration: 140ms;
+  animation-timing-function: var(--ease);
+}
+
+::view-transition-new(root) {
+  animation-duration: 200ms;
+  animation-timing-function: var(--ease);
+}
+
+/* The product image: the one thing that should be followed by the eye.
+   Longer than the page, so it leads rather than trails. */
+::view-transition-group(product-media) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Morph the box; do NOT crossfade the pixels. Both snapshots are the
+   same photograph at different sizes, so a crossfade only adds mud. */
+::view-transition-old(product-media),
+::view-transition-new(product-media) {
+  animation: none;
+  mix-blend-mode: normal;
+  height: 100%;
+  overflow: clip;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
+
+/* ============================================================
+   THE DOSSIER FRAME
+   ============================================================
+   From the brand deck, not from another store. The deck marks every
+   page in its corners — wordmark, revision, page number — in tiny
+   tracked mono. That is what makes it read as a controlled document
+   rather than a brochure, and it is the one thing here no DTC
+   template can imitate, because it comes from the brand's own
+   artefact.
+
+   Fixed to the viewport: the frame is the instrument the site is read
+   through, not part of the scroll.
+   ============================================================ */
+
+.frame {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .frame {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+  }
+
+  .frame__mark {
+    position: fixed;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--steel);
+    /* The frame sits over both ink and paper sections, so it cannot pick one.
+       difference inverts it against whatever is behind — dark on paper, light
+       on ink — with no JS and no per-section state. */
+    mix-blend-mode: difference;
+    color: #8a8f93;
+    transition: opacity var(--dur) var(--ease);
+  }
+
+  .frame__mark--bl { bottom: 22px; left: 22px; }
+  .frame__mark--br { bottom: 22px; right: 22px; }
+
+  /* The name up the margins. Same difference-blend as the marks, so it reads on
+     ink and paper alike. Vertical, tracked, present the whole scroll. */
+  .frame__side {
+    position: fixed;
+    top: 50%;
+    writing-mode: vertical-rl;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: lowercase;
+    line-height: 1;
+    color: #8a8f93;
+    mix-blend-mode: difference;
+    white-space: nowrap;
+  }
+
+  .frame__side--l {
+    left: 20px;
+    transform: translateY(-50%) rotate(180deg);
+  }
+
+  .frame__side--r {
+    right: 20px;
+    transform: translateY(-50%);
+  }
+
+  /* The document edge. Barely there — you should feel it, not read it. */
+  .frame__rule {
+    position: fixed;
+    left: 22px;
+    right: 22px;
+    height: 1px;
+    background: #8a8f93;
+    opacity: 0.28;
+    mix-blend-mode: difference;
+  }
+
+  /* One rule, at the foot. A top rule would double the announcement bar's own
+     bottom border — two lines saying the same thing. */
+  .frame__rule--b { bottom: 40px; }
+
+  /* The frame needs its margin back from the layout. */
+  body {
+    padding-inline: 0;
+  }
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+  .frame__mark {
+    transition: none;
+  }
+}

@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f5f6">
+
+    <title>Cart · NEOSELF</title>
+    <meta name="description" content="Skincare, Engineered."><link rel="preload" href="/neoself-v3-preview/assets/geist-sans.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/neoself-v3-preview/assets/base.css"><script type="speculationrules">
+      {
+        "prefetch": [
+          {
+            "where": { "href_matches": "/products/*" },
+            "eagerness": "moderate"
+          },
+          {
+            "where": { "href_matches": "/collections/*" },
+            "eagerness": "moderate"
+          }
+        ]
+      }
+    </script>
+  <style>
+.cart__head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+  padding-top: 24px;
+}
+
+.cart__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  padding-block: 24px 64px;
+  border-top: 1px solid var(--silver);
+}
+
+.cart__empty-cta {
+  margin-top: 4px;
+}
+
+.cart__lines {
+  border-top: 1px solid var(--silver);
+}
+
+.cart-line {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  grid-template-areas:
+    'media meta price'
+    'media qty  qty';
+  gap: 8px 20px;
+  align-items: start;
+  padding-block: 24px;
+  border-bottom: 1px solid var(--silver);
+}
+
+.cart-line__media {
+  grid-area: media;
+  aspect-ratio: 4 / 5;
+  background: var(--surface);
+  overflow: hidden;
+  border-radius: calc(var(--radius-media) / 2);
+}
+
+.cart-line__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cart-line__meta {
+  grid-area: meta;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.cart-line__title {
+  transition: opacity var(--dur) var(--ease);
+}
+
+.cart-line__title:hover {
+  opacity: 0.55;
+}
+
+.cart-line__qty {
+  grid-area: qty;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.qty__btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--silver);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1;
+  color: var(--steel);
+  transition:
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.qty__btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.qty__n {
+  min-width: 32px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.cart-line__price {
+  grid-area: price;
+  font-size: 14px;
+  text-align: right;
+}
+
+.cart__foot {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding-block: 32px;
+}
+
+.cart__totals {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cart__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  max-width: 340px;
+}
+
+.cart__subtotal {
+  font-size: 20px;
+}
+
+.cart__shipping {
+  font-size: 13px;
+  color: var(--steel);
+}
+
+.cart__checkout-btn {
+  width: 100%;
+  text-align: center;
+}
+
+.cart__note {
+  padding-top: 24px;
+  border-top: 1px solid var(--silver);
+  max-width: 70ch;
+}
+
+@media (min-width: 768px) {
+  .cart-line {
+    grid-template-columns: 88px 1fr auto auto;
+    grid-template-areas: 'media meta qty price';
+    align-items: center;
+    gap: 32px;
+  }
+
+  .cart-line__qty {
+    margin-top: 0;
+  }
+
+  .cart__foot {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .cart__checkout-btn {
+    width: auto;
+    min-width: 260px;
+  }
+}
+
+
+/* v3: a silver band — the bottles' accent, up top. */
+.announce {
+  background: var(--silver);
+}
+
+.announce__text {
+  padding-block: 13px;
+  text-align: center;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  margin-bottom: -64px;
+  border-bottom: 1px solid transparent;
+  transition:
+    color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    transform 460ms cubic-bezier(0.34, 1.5, 0.5, 1);
+}
+
+/* Hidden on scroll-down; the bounce is in the transform easing. */
+.header.is-hidden {
+  transform: translateY(-100%);
+}
+
+.header__inner {
+  height: 64px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.header__burger {
+  grid-column: 1;
+  justify-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  align-items: flex-start;
+  margin-left: -8px;
+}
+
+.header__burger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: currentColor;
+  transition:
+    transform var(--dur) var(--ease),
+    opacity var(--dur) var(--ease);
+}
+
+.nav-open .header__burger span:first-child {
+  transform: translateY(3px) rotate(45deg);
+}
+
+.nav-open .header__burger span:last-child {
+  transform: translateY(-3px) rotate(-45deg);
+}
+
+.header__logo {
+  grid-column: 2;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+  color: currentColor;
+}
+
+.header__cart {
+  grid-column: 3;
+  justify-self: end;
+}
+
+.header__link {
+  transition: opacity var(--dur) var(--ease);
+}
+
+.header__link:hover {
+  opacity: 0.55;
+}
+
+/* Ink marks throughout; a paper field with a hairline appears once scrolled. */
+.header {
+  color: var(--ink);
+}
+
+.header.is-scrolled {
+  background: var(--paper);
+  border-bottom-color: var(--silver);
+}
+
+/* The menu panel, used at every width. */
+.header__mobile {
+  background: var(--paper);
+  border-top: 1px solid var(--silver);
+}
+
+.header__mobile-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-block: 32px;
+}
+
+.header__mobile-link {
+  color: var(--ink);
+  transition: opacity var(--dur) var(--ease);
+}
+
+.header__mobile-link:hover {
+  opacity: 0.55;
+}
+
+
+.footer {
+  background: var(--paper);
+}
+
+.footer__inner {
+  padding-block: var(--rhythm);
+  display: grid;
+  gap: 40px;
+  grid-template-columns: 1fr;
+}
+
+.footer__tagline {
+  margin-top: 14px;
+  max-width: 34ch;
+}
+
+.footer__list {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer__link {
+  transition: opacity var(--dur) var(--ease);
+}
+
+.footer__link:hover {
+  opacity: 0.55;
+}
+
+/* The brand at scale, closing the page. Clipped to the viewport width so it
+   fills edge to edge without causing horizontal scroll. */
+.footer__wordmark {
+  font-size: 20vw;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  text-transform: lowercase;
+  text-align: center;
+  color: var(--ink);
+  overflow: hidden;
+  padding-top: 24px;
+  user-select: none;
+  transform: scale(0.8);
+  transform-origin: bottom center;
+  transition: transform 900ms var(--ease);
+}
+
+/* Grows to full size as it enters view (theme.js toggles is-in). */
+.footer__wordmark.is-in {
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer__wordmark {
+    transition: none;
+    transform: none;
+  }
+}
+
+.footer__base {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-block: 24px;
+}
+
+@media (min-width: 768px) {
+  .footer__inner {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+
+  .footer__base {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+</style></head>
+
+  <body class="template-cart">
+    <a href="#main" class="visually-hidden">Skip to content</a>
+
+    <div class="frame" aria-hidden="true"><span class="frame__mark frame__mark--bl" data-frame-label></span>
+  <span class="frame__mark frame__mark--br" data-frame-count></span><span class="frame__side frame__side--l">NEOSELF</span>
+  <span class="frame__side frame__side--r">NEOSELF</span><span class="frame__rule frame__rule--b"></span>
+</div>
+
+
+    <div class="announce rule-bottom">
+  <div class="container">
+    <p class="announce__text t-eyebrow">
+      Free shipping on orders over ₹1,000
+    </p>
+  </div>
+</div>
+
+
+
+
+
+    <header class="header" data-header>
+  <div class="container header__inner">
+    <button
+      class="header__burger"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="site-menu"
+      data-nav-toggle
+    >
+      <span></span><span></span>
+    </button>
+
+    <a href="/neoself-v3-preview/" class="header__logo" aria-label="NEOSELF home">
+      <span class="logo " aria-hidden="true">neoself</span>
+
+    </a>
+
+    <a href="/neoself-v3-preview/cart" class="header__link t-eyebrow header__cart">
+      Cart<span class="t-mono">&nbsp;(0)</span>
+    </a>
+  </div>
+
+  <div class="header__mobile" id="site-menu" hidden data-mobile-nav>
+    <nav class="container header__mobile-inner" aria-label="Menu"><a href="/neoself-v3-preview/products/the-system" class="header__mobile-link t-heading">The System</a><a href="/neoself-v3-preview/collections/all" class="header__mobile-link t-heading">The Line</a><a href="/neoself-v3-preview/pages/science" class="header__mobile-link t-heading">The Science</a><a href="/neoself-v3-preview/cart" class="header__mobile-link t-heading">Cart (0)</a>
+    </nav>
+  </div>
+</header>
+
+
+
+
+
+
+    <main id="main"><section class="section cart" data-doc-section="THE CART">
+  <div class="container">
+    <header class="cart__head">
+      <p class="t-eyebrow t-muted">YOUR ORDER</p>
+      <h1 class="t-heading">Nothing here yet.</h1>
+    </header><div class="cart__empty">
+        <p class="prose t-muted">Three products, one order. Start with the system, or with whichever step you are missing.</p>
+        <a href="/neoself-v3-preview/collections/all" class="pill cart__empty-cta">
+          See the line
+        </a>
+      </div></div>
+</section>
+
+
+
+
+</main>
+
+    <footer class="footer rule-top">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <span class="logo " aria-hidden="true">neoself</span>
+
+      <p class="footer__tagline t-body-sm t-muted">Skincare, Engineered.</p>
+    </div><div class="footer__col">
+        <h2 class="t-data-label">The line</h2>
+        <ul class="footer__list"><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">The System</a>
+            </li><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">CLEAN</a>
+            </li><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">REPAIR</a>
+            </li><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">DEFEND</a>
+            </li></ul>
+      </div><div class="footer__col">
+        <h2 class="t-data-label">Evidence</h2>
+        <ul class="footer__list"><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">The Science</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Our trials</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Ingredient index</a>
+            </li></ul>
+      </div><div class="footer__col">
+        <h2 class="t-data-label">Support</h2>
+        <ul class="footer__list"><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Shipping</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Returns</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Contact</a>
+            </li></ul>
+      </div></div>
+
+  <div class="footer__wordmark" aria-hidden="true">NEOSELF</div>
+
+  <div class="container footer__base rule-top">
+    <p class="t-data-label">© 2026 NEOSELF</p>
+    <p class="t-data-label">IND · EST 2026 · MADE IN INDIA</p>
+  </div>
+</footer>
+
+
+
+
+
+
+    <script src="/neoself-v3-preview/assets/theme.js" defer></script>
+  </body>
+</html>

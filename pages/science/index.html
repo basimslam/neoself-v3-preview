@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f5f6">
+
+    <title>The Science · NEOSELF</title>
+    <meta name="description" content="Skincare, Engineered."><link rel="preload" href="/neoself-v3-preview/assets/geist-sans.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/neoself-v3-preview/assets/base.css"><script type="speculationrules">
+      {
+        "prefetch": [
+          {
+            "where": { "href_matches": "/products/*" },
+            "eagerness": "moderate"
+          },
+          {
+            "where": { "href_matches": "/collections/*" },
+            "eagerness": "moderate"
+          }
+        ]
+      }
+    </script>
+  <style>
+.science__head {
+  padding-block: var(--rhythm);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.science__title {
+  max-width: 18ch;
+}
+
+.science__lede {
+  font-size: 18px;
+  color: var(--steel);
+}
+
+.science__block {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding-block: 40px;
+}
+
+.science__num {
+  color: var(--steel);
+}
+
+.science__block-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.science__text {
+  color: var(--steel);
+}
+
+.science__trials {
+  padding-block: var(--rhythm);
+  margin-top: var(--rhythm);
+}
+
+.science__trials-label {
+  margin-bottom: 12px;
+}
+
+.trials {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 40px;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.trials th,
+.trials td {
+  text-align: left;
+  padding: 14px 24px 14px 0;
+  border-bottom: 1px solid var(--silver);
+  vertical-align: baseline;
+}
+
+.trials th {
+  border-bottom-color: var(--ink);
+}
+
+.trials__product {
+  color: var(--ink);
+}
+
+.trials__value {
+  font-size: 16px;
+}
+
+.trials__method {
+  color: var(--steel);
+}
+
+.science__note {
+  margin-top: 28px;
+  max-width: 70ch;
+}
+
+@media (min-width: 768px) {
+  .science__block {
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    padding-block: 48px;
+  }
+
+  .trials {
+    display: table;
+    white-space: normal;
+  }
+}
+
+
+/* v3: a silver band — the bottles' accent, up top. */
+.announce {
+  background: var(--silver);
+}
+
+.announce__text {
+  padding-block: 13px;
+  text-align: center;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  margin-bottom: -64px;
+  border-bottom: 1px solid transparent;
+  transition:
+    color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    transform 460ms cubic-bezier(0.34, 1.5, 0.5, 1);
+}
+
+/* Hidden on scroll-down; the bounce is in the transform easing. */
+.header.is-hidden {
+  transform: translateY(-100%);
+}
+
+.header__inner {
+  height: 64px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.header__burger {
+  grid-column: 1;
+  justify-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  align-items: flex-start;
+  margin-left: -8px;
+}
+
+.header__burger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: currentColor;
+  transition:
+    transform var(--dur) var(--ease),
+    opacity var(--dur) var(--ease);
+}
+
+.nav-open .header__burger span:first-child {
+  transform: translateY(3px) rotate(45deg);
+}
+
+.nav-open .header__burger span:last-child {
+  transform: translateY(-3px) rotate(-45deg);
+}
+
+.header__logo {
+  grid-column: 2;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+  color: currentColor;
+}
+
+.header__cart {
+  grid-column: 3;
+  justify-self: end;
+}
+
+.header__link {
+  transition: opacity var(--dur) var(--ease);
+}
+
+.header__link:hover {
+  opacity: 0.55;
+}
+
+/* Ink marks throughout; a paper field with a hairline appears once scrolled. */
+.header {
+  color: var(--ink);
+}
+
+.header.is-scrolled {
+  background: var(--paper);
+  border-bottom-color: var(--silver);
+}
+
+/* The menu panel, used at every width. */
+.header__mobile {
+  background: var(--paper);
+  border-top: 1px solid var(--silver);
+}
+
+.header__mobile-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-block: 32px;
+}
+
+.header__mobile-link {
+  color: var(--ink);
+  transition: opacity var(--dur) var(--ease);
+}
+
+.header__mobile-link:hover {
+  opacity: 0.55;
+}
+
+
+.footer {
+  background: var(--paper);
+}
+
+.footer__inner {
+  padding-block: var(--rhythm);
+  display: grid;
+  gap: 40px;
+  grid-template-columns: 1fr;
+}
+
+.footer__tagline {
+  margin-top: 14px;
+  max-width: 34ch;
+}
+
+.footer__list {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer__link {
+  transition: opacity var(--dur) var(--ease);
+}
+
+.footer__link:hover {
+  opacity: 0.55;
+}
+
+/* The brand at scale, closing the page. Clipped to the viewport width so it
+   fills edge to edge without causing horizontal scroll. */
+.footer__wordmark {
+  font-size: 20vw;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  text-transform: lowercase;
+  text-align: center;
+  color: var(--ink);
+  overflow: hidden;
+  padding-top: 24px;
+  user-select: none;
+  transform: scale(0.8);
+  transform-origin: bottom center;
+  transition: transform 900ms var(--ease);
+}
+
+/* Grows to full size as it enters view (theme.js toggles is-in). */
+.footer__wordmark.is-in {
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer__wordmark {
+    transition: none;
+    transform: none;
+  }
+}
+
+.footer__base {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-block: 24px;
+}
+
+@media (min-width: 768px) {
+  .footer__inner {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+
+  .footer__base {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+</style></head>
+
+  <body class="template-page.science">
+    <a href="#main" class="visually-hidden">Skip to content</a>
+
+    <div class="frame" aria-hidden="true"><span class="frame__mark frame__mark--bl" data-frame-label></span>
+  <span class="frame__mark frame__mark--br" data-frame-count></span><span class="frame__side frame__side--l">NEOSELF</span>
+  <span class="frame__side frame__side--r">NEOSELF</span><span class="frame__rule frame__rule--b"></span>
+</div>
+
+
+    <div class="announce rule-bottom">
+  <div class="container">
+    <p class="announce__text t-eyebrow">
+      Free shipping on orders over ₹1,000
+    </p>
+  </div>
+</div>
+
+
+
+
+
+    <header class="header" data-header>
+  <div class="container header__inner">
+    <button
+      class="header__burger"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="site-menu"
+      data-nav-toggle
+    >
+      <span></span><span></span>
+    </button>
+
+    <a href="/neoself-v3-preview/" class="header__logo" aria-label="NEOSELF home">
+      <span class="logo " aria-hidden="true">neoself</span>
+
+    </a>
+
+    <a href="/neoself-v3-preview/cart" class="header__link t-eyebrow header__cart">
+      Cart<span class="t-mono">&nbsp;(0)</span>
+    </a>
+  </div>
+
+  <div class="header__mobile" id="site-menu" hidden data-mobile-nav>
+    <nav class="container header__mobile-inner" aria-label="Menu"><a href="/neoself-v3-preview/products/the-system" class="header__mobile-link t-heading">The System</a><a href="/neoself-v3-preview/collections/all" class="header__mobile-link t-heading">The Line</a><a href="/neoself-v3-preview/pages/science" class="header__mobile-link t-heading">The Science</a><a href="/neoself-v3-preview/cart" class="header__mobile-link t-heading">Cart (0)</a>
+    </nav>
+  </div>
+</header>
+
+
+
+
+
+
+    <main id="main"><section class="science" data-doc-section="THE SCIENCE">
+  <div class="container science__head">
+    <p class="t-eyebrow t-muted">The science</p>
+    <h1 class="science__title t-hero">We would rather be checked than believed.</h1>
+    <p class="science__lede prose">Most skincare asks for trust. This page is an attempt to make trust unnecessary, by publishing enough that you can decide for yourself, including the parts that do not flatter us.</p>
+  </div>
+
+  <div class="container"><article class="science__block rule-top">
+        <p class="science__num t-data-label">01</p>
+        <div class="science__block-body">
+          <h2 class="t-heading">We print the number.</h2>
+          <p class="science__text prose">Every active appears at the concentration we actually formulated with, on the label and on the page. Not "contains vitamin C". Eleven percent. A brand that will not tell you the dose is asking you to assume it is high enough.</p>
+        </div>
+      </article><article class="science__block rule-top">
+        <p class="science__num t-data-label">02</p>
+        <div class="science__block-body">
+          <h2 class="t-heading">Measured and reported are not the same word.</h2>
+          <p class="science__text prose">An instrument reading and a person's opinion are different kinds of evidence, and collapsing them is how skincare marketing works. We keep them apart. If a number came from a device, we name the device. If it came from asking people, we say they agreed. Never that they saw.</p>
+        </div>
+      </article><article class="science__block rule-top">
+        <p class="science__num t-data-label">03</p>
+        <div class="science__block-body">
+          <h2 class="t-heading">The sample size goes on the page.</h2>
+          <p class="science__text prose">Ours are small. Thirty people, not three thousand. Publishing that is the point: a percentage without an n is a number that has been chosen rather than found, and you cannot tell the difference unless we tell you.</p>
+        </div>
+      </article><article class="science__block rule-top">
+        <p class="science__num t-data-label">04</p>
+        <div class="science__block-body">
+          <h2 class="t-heading">We tell you when not to buy.</h2>
+          <p class="science__text prose">Every formula lists what it should not be used with, and our reviews are unfiltered, including the two-star ones, which are frequently the most useful. We do not remove reviews for what they say about the product. Only for spam, personal information, or being about something else entirely.</p>
+        </div>
+      </article><article class="science__block rule-top">
+        <p class="science__num t-data-label">05</p>
+        <div class="science__block-body">
+          <h2 class="t-heading">This is a category of one, and that is not a boast.</h2>
+          <p class="science__text prose">Nothing here is a breakthrough. The actives are well-understood, the doses are unremarkable, and the formulas are not secret. The only unusual thing NEOSELF does is show its work. That should be the floor, not the differentiator, and the fact that it is a differentiator is the problem we are responding to.</p>
+        </div>
+      </article></div><div class="surface-evidence science__trials">
+    <div class="container">
+      <p class="t-eyebrow t-muted science__trials-label">EVERY TRIAL</p>
+      <h2 class="t-heading">All of it, in one table.</h2>
+      <p class="science__text prose t-muted">Every measurement we have taken on a NEOSELF formula, with its sample size and the instrument that produced it. Nothing is omitted for being small or inconvenient.</p>
+
+      <table class="trials">
+        <thead>
+          <tr>
+            <th class="t-data-label">Product</th>
+            <th class="t-data-label">Measured</th>
+            <th class="t-data-label">Result</th>
+            <th class="t-data-label">n</th>
+            <th class="t-data-label">Weeks</th>
+            <th class="t-data-label">Instrument</th>
+          </tr>
+        </thead>
+        <tbody><tr>
+                  <td class="t-data-label trials__product">CLEAN</td>
+                  <td class="t-body-sm">sebum index</td>
+                  <td class="t-mono trials__value">−12.6%</td>
+                  <td class="t-mono">30</td>
+                  <td class="t-mono">4</td>
+                  <td class="t-mono trials__method">Sebumeter SM815</td>
+                </tr><tr>
+                  <td class="t-data-label trials__product">REPAIR</td>
+                  <td class="t-body-sm">hyperpigmentation index</td>
+                  <td class="t-mono trials__value">−37.2%</td>
+                  <td class="t-mono">32</td>
+                  <td class="t-mono">8</td>
+                  <td class="t-mono trials__method">Mexameter MX18</td>
+                </tr><tr>
+                  <td class="t-data-label trials__product"></td>
+                  <td class="t-body-sm">transepidermal water loss</td>
+                  <td class="t-mono trials__value">−19.4%</td>
+                  <td class="t-mono">32</td>
+                  <td class="t-mono">8</td>
+                  <td class="t-mono trials__method">Tewameter TM300</td>
+                </tr><tr>
+                  <td class="t-data-label trials__product">DEFEND</td>
+                  <td class="t-body-sm">UV-induced erythema</td>
+                  <td class="t-mono trials__value">−41.8%</td>
+                  <td class="t-mono">28</td>
+                  <td class="t-mono">4</td>
+                  <td class="t-mono trials__method">Chromameter CR400</td>
+                </tr></tbody>
+      </table>
+
+      <p class="science__note t-data-label">Measured values are instrument readings against baseline under third-party supervision. They are not participant opinions. Where we have only participant opinions, we say so and do not call it a measurement.</p>
+    </div>
+  </div>
+</section>
+
+
+
+
+</main>
+
+    <footer class="footer rule-top">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <span class="logo " aria-hidden="true">neoself</span>
+
+      <p class="footer__tagline t-body-sm t-muted">Skincare, Engineered.</p>
+    </div><div class="footer__col">
+        <h2 class="t-data-label">The line</h2>
+        <ul class="footer__list"><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">The System</a>
+            </li><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">CLEAN</a>
+            </li><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">REPAIR</a>
+            </li><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">DEFEND</a>
+            </li></ul>
+      </div><div class="footer__col">
+        <h2 class="t-data-label">Evidence</h2>
+        <ul class="footer__list"><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">The Science</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Our trials</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Ingredient index</a>
+            </li></ul>
+      </div><div class="footer__col">
+        <h2 class="t-data-label">Support</h2>
+        <ul class="footer__list"><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Shipping</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Returns</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Contact</a>
+            </li></ul>
+      </div></div>
+
+  <div class="footer__wordmark" aria-hidden="true">NEOSELF</div>
+
+  <div class="container footer__base rule-top">
+    <p class="t-data-label">© 2026 NEOSELF</p>
+    <p class="t-data-label">IND · EST 2026 · MADE IN INDIA</p>
+  </div>
+</footer>
+
+
+
+
+
+
+    <script src="/neoself-v3-preview/assets/theme.js" defer></script>
+  </body>
+</html>

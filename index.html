@@ -1,0 +1,1463 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f5f6">
+
+    <title>NEOSELF</title>
+    <meta name="description" content="Skincare, Engineered."><link rel="preload" href="/neoself-v3-preview/assets/geist-sans.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/neoself-v3-preview/assets/base.css"><script type="speculationrules">
+      {
+        "prefetch": [
+          {
+            "where": { "href_matches": "/products/*" },
+            "eagerness": "moderate"
+          },
+          {
+            "where": { "href_matches": "/collections/*" },
+            "eagerness": "moderate"
+          }
+        ]
+      }
+    </script>
+  <style>
+.hero {
+  position: relative;
+  min-height: 600px;
+  height: calc(100svh - 40px);
+  display: flex;
+  align-items: flex-end;
+  background: var(--ink);
+  overflow: hidden;
+}
+
+/* No image yet: a flat ink field. Reads as the deck's cover rather than as a
+   broken <img>. */
+.hero--flat {
+  background: var(--ink);
+}
+
+/* The <picture> wrapper is what needs positioning; the img fills it. */
+.hero picture {
+  position: absolute;
+  inset: 0;
+}
+
+.hero__media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* INK, from the left.
+
+   The site had no tonal range: every section was --paper or --surface, both
+   near-white. A page that is 100% light has no rhythm, and that — not warmth —
+   is what makes Rhode read premium and this read plain.
+
+   The deck's own cover is ink ground with the wordmark in paper. The brand
+   already knows this; the site had simply never done it.
+
+   Left, not bottom, because the photography is composed with its subject in the
+   right two-thirds and the left third empty. The scrim lands on empty ground,
+   so it costs the image nothing and buys a full-strength dark field for type. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    /* Top band. The header overlays the hero full-width, so its right-hand nav
+       sits over the bright part of the photograph where the left scrim has
+       already faded out — measured at 1.24:1. This carries the header, and only
+       the header: it is gone by 150px. */
+    linear-gradient(
+      to bottom,
+      rgb(16 17 18 / 0.72) 0px,
+      rgb(16 17 18 / 0.52) 70px,
+      rgb(16 17 18 / 0.12) 130px,
+      rgb(16 17 18 / 0) 190px
+    ),
+    /* The field the headline sits in. */
+    linear-gradient(
+      to right,
+      rgb(16 17 18 / 0.97) 0%,
+      rgb(16 17 18 / 0.92) 26%,
+      rgb(16 17 18 / 0.62) 46%,
+      rgb(16 17 18 / 0.18) 68%,
+      rgb(16 17 18 / 0) 85%
+    );
+}
+
+/* On a phone the frame is portrait, so there is no empty left third to hide in.
+   Fall back to a bottom wash — same ink, different edge. */
+@media (max-width: 767px) {
+  .hero__scrim {
+    background: linear-gradient(
+      to top,
+      rgb(16 17 18 / 0.96) 0%,
+      rgb(16 17 18 / 0.88) 34%,
+      rgb(16 17 18 / 0.5) 56%,
+      rgb(16 17 18 / 0.12) 78%,
+      rgb(16 17 18 / 0) 92%
+    );
+  }
+}
+
+.hero__inner {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56px;
+}
+
+/* The headline is the largest thing on the site, and the only rival to the
+   clinical figures. Everything between them stays suppressed. */
+.hero__line {
+  font-size: 54px;
+}
+
+.hero__content {
+  max-width: 36rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+/* Paper type on ink. This is the deck's cover, and the only place on the site
+   where the palette inverts — which is exactly what makes it land. */
+.hero__content {
+  color: var(--paper);
+}
+
+.hero__eyebrow {
+  color: rgb(244 245 246 / 0.62);
+}
+
+.hero__body {
+  max-width: 44ch;
+  color: rgb(244 245 246 / 0.78);
+}
+
+.hero__cta {
+  border-color: rgb(244 245 246 / 0.5);
+  color: var(--paper);
+}
+
+.hero__cta:hover {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper);
+}
+
+.hero__cta {
+  margin-top: 8px;
+}
+
+/* ---- INSET ------------------------------------------------------------
+   The image as a plate on a page, with the margin visible around it.
+
+   This is the dossier being consistent with itself: the frame already sits at
+   22px with a foot rule, and a full-bleed hero argues with it — one says
+   "document", the other says "website". An inset plate is what the deck does on
+   every interior page.
+
+   Hard corners, deliberately. Five of the six premium references hard-corner
+   all media; the one exception is Rhode, which the teardown ruled out as "warm,
+   playful — the direct opposite of Engineer-Sage". And the brand's own language
+   is Anodized Steel and Brushed Silver. A machined object has sharp edges.
+   ---------------------------------------------------------------------- */
+
+.hero--inset {
+  /* block, not flex — the parent .hero is flex for the full-bleed case, and a
+     flex item sizes to its content. The plate collapsed to 544px because of it. */
+  display: block;
+  background: var(--paper);
+  padding: 0 0 var(--gutter);
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+}
+
+.hero--inset .hero__plate {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink);
+  border-radius: var(--radius-media);
+  /* Clears the 64px header rather than sliding under it — the point of an inset
+     is that the margin is visible on every side. */
+  margin-top: 64px;
+  height: calc(100svh - 168px);
+  min-height: 480px;
+  display: flex;
+  align-items: flex-end;
+}
+
+/* Full-bleed: neither wrapper constrains anything — the image IS the section. */
+.hero--bleed .hero__frame,
+.hero--bleed .hero__plate {
+  display: contents;
+}
+
+/* The plate's own inset for type. Deliberately NOT .container — the plate is
+   already inside one, and nesting containers pads twice. */
+.hero--inset .hero__inner {
+  padding-inline: 40px;
+}
+
+.hero--bleed .hero__inner {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@media (min-width: 768px) {
+  .hero__inner {
+    padding-bottom: 80px;
+  }
+
+  .hero__line {
+    font-size: 84px;
+  }
+
+  /* Type sits in the left third, where the scrim is at full strength and the
+     photograph is empty anyway. */
+  .hero__content {
+    max-width: 30rem;
+  }
+
+  /* No horizontal padding here. It used to be 40px, which shrank the available
+     width so the .container inside could never reach its 1440 max — the plate
+     came out 40px narrower than every section below it at exactly 1440. The
+     container is the only thing allowed to decide horizontal position. */
+  .hero--inset {
+    padding-bottom: 40px;
+  }
+
+  .hero--inset .hero__plate {
+    height: calc(100svh - 148px);
+  }
+}
+
+
+/* v3: the name, oversized and faint, sitting behind the products. */
+.the-system {
+  position: relative;
+  overflow: hidden;
+}
+
+.the-system::before {
+  content: 'neoself';
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 30vw;
+  letter-spacing: -0.03em;
+  color: var(--surface);
+  opacity: 0.6;
+  z-index: 0;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.the-system .container {
+  position: relative;
+  z-index: 1;
+}
+
+.the-system__bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.carousel__btn {
+  width: 46px;
+  height: 46px;
+  border: 1.5px solid var(--ink);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--ink);
+  transition:
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.carousel__btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* The carousel: horizontal scroll with snap. Three in view on desktop, ~1.2 on a
+   phone so the next card peeks and the swipe is discoverable. */
+.the-system__seq {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+}
+
+/* While dragging: grabbing cursor, snap off (so it tracks the pointer), and no
+   accidental text/image selection. */
+.the-system__seq.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+  user-select: none;
+}
+
+.the-system__seq img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* Mouse over the carousel: hide the default cursor, the custom "drag" cursor
+   takes over (theme.js). Declared after is-dragging so it wins during a drag. */
+.the-system__seq.has-cursor {
+  cursor: none;
+}
+
+.the-system__seq::-webkit-scrollbar {
+  display: none;
+}
+
+.the-system__item {
+  flex: 0 0 82%;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 768px) {
+  .the-system__item {
+    flex: 0 0 calc((100% - 40px) / 3);
+  }
+}
+
+
+.evidence__head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.evidence__body {
+  margin-top: 4px;
+}
+
+.evidence__tier {
+  margin-bottom: 40px;
+}
+
+/* The tier label is the only thing separating measurement from opinion, so it
+   is stated rather than implied. */
+.evidence__tier-label {
+  margin-bottom: 28px;
+  color: var(--ink);
+}
+
+.evidence__grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+
+.evidence__note {
+  padding-top: 28px;
+  max-width: 70ch;
+}
+
+@media (min-width: 768px) {
+  .evidence__head {
+    margin-bottom: 64px;
+  }
+
+  .evidence__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .evidence__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+
+.the-spec__head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.the-spec__grid {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1fr;
+}
+
+.the-spec__label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.the-spec__link {
+  margin-top: 12px;
+  color: var(--ink);
+  transition: opacity var(--dur) var(--ease);
+}
+
+.the-spec__link:hover {
+  opacity: 0.55;
+}
+
+@media (min-width: 768px) {
+  .the-spec__head {
+    margin-bottom: 64px;
+  }
+
+  .the-spec__grid {
+    grid-template-columns: 1fr 2fr;
+    gap: 64px;
+  }
+
+}
+
+
+.the-case__head {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+/* Bigger than a section heading, smaller than the hero. This is the one place
+   on the page making an argument in prose rather than in numbers, so it gets
+   room the other headings do not. */
+.the-case__title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  max-width: 22ch;
+}
+
+.the-case__body {
+  color: var(--steel);
+  font-size: 17px;
+}
+
+/* v3: each objection is a rounded surface card, not a hairline row. */
+.the-case__list {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.the-case__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  background: var(--surface);
+  border-radius: var(--radius-media);
+  padding: 26px 28px;
+}
+
+.the-case__objection {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.the-case__answer {
+  margin: 0;
+  font-size: 16px;
+  color: var(--steel);
+  max-width: 60ch;
+}
+
+@media (min-width: 768px) {
+  .the-case__title {
+    font-size: 44px;
+  }
+
+  .the-case__head {
+    margin-bottom: 64px;
+  }
+
+  .the-case__row {
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+    align-items: baseline;
+    padding: 32px 36px;
+  }
+}
+
+
+.the-ritual__head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.the-ritual__steps {
+  border-top: 1px solid var(--silver);
+}
+
+.the-ritual__step {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 20px;
+  padding-block: 24px;
+  border-bottom: 1px solid var(--silver);
+}
+
+.the-ritual__mark {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.ritual-mark {
+  width: 44px;
+  height: 44px;
+  color: var(--ink);
+}
+
+.the-ritual__num {
+  color: var(--steel);
+}
+
+.the-ritual__detail {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.the-ritual__how {
+  max-width: 52ch;
+}
+
+@media (min-width: 768px) {
+  .the-ritual__step {
+    grid-template-columns: 88px 1fr;
+    gap: 40px;
+  }
+
+  .ritual-mark {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+
+.reviews-section__head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+
+
+/* v3: a silver band — the bottles' accent, up top. */
+.announce {
+  background: var(--silver);
+}
+
+.announce__text {
+  padding-block: 13px;
+  text-align: center;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  margin-bottom: -64px;
+  border-bottom: 1px solid transparent;
+  transition:
+    color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    transform 460ms cubic-bezier(0.34, 1.5, 0.5, 1);
+}
+
+/* Hidden on scroll-down; the bounce is in the transform easing. */
+.header.is-hidden {
+  transform: translateY(-100%);
+}
+
+.header__inner {
+  height: 64px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.header__burger {
+  grid-column: 1;
+  justify-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  align-items: flex-start;
+  margin-left: -8px;
+}
+
+.header__burger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: currentColor;
+  transition:
+    transform var(--dur) var(--ease),
+    opacity var(--dur) var(--ease);
+}
+
+.nav-open .header__burger span:first-child {
+  transform: translateY(3px) rotate(45deg);
+}
+
+.nav-open .header__burger span:last-child {
+  transform: translateY(-3px) rotate(-45deg);
+}
+
+.header__logo {
+  grid-column: 2;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+  color: currentColor;
+}
+
+.header__cart {
+  grid-column: 3;
+  justify-self: end;
+}
+
+.header__link {
+  transition: opacity var(--dur) var(--ease);
+}
+
+.header__link:hover {
+  opacity: 0.55;
+}
+
+/* Ink marks throughout; a paper field with a hairline appears once scrolled. */
+.header {
+  color: var(--ink);
+}
+
+.header.is-scrolled {
+  background: var(--paper);
+  border-bottom-color: var(--silver);
+}
+
+/* The menu panel, used at every width. */
+.header__mobile {
+  background: var(--paper);
+  border-top: 1px solid var(--silver);
+}
+
+.header__mobile-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-block: 32px;
+}
+
+.header__mobile-link {
+  color: var(--ink);
+  transition: opacity var(--dur) var(--ease);
+}
+
+.header__mobile-link:hover {
+  opacity: 0.55;
+}
+
+
+.footer {
+  background: var(--paper);
+}
+
+.footer__inner {
+  padding-block: var(--rhythm);
+  display: grid;
+  gap: 40px;
+  grid-template-columns: 1fr;
+}
+
+.footer__tagline {
+  margin-top: 14px;
+  max-width: 34ch;
+}
+
+.footer__list {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer__link {
+  transition: opacity var(--dur) var(--ease);
+}
+
+.footer__link:hover {
+  opacity: 0.55;
+}
+
+/* The brand at scale, closing the page. Clipped to the viewport width so it
+   fills edge to edge without causing horizontal scroll. */
+.footer__wordmark {
+  font-size: 20vw;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  text-transform: lowercase;
+  text-align: center;
+  color: var(--ink);
+  overflow: hidden;
+  padding-top: 24px;
+  user-select: none;
+  transform: scale(0.8);
+  transform-origin: bottom center;
+  transition: transform 900ms var(--ease);
+}
+
+/* Grows to full size as it enters view (theme.js toggles is-in). */
+.footer__wordmark.is-in {
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer__wordmark {
+    transition: none;
+    transform: none;
+  }
+}
+
+.footer__base {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-block: 24px;
+}
+
+@media (min-width: 768px) {
+  .footer__inner {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+
+  .footer__base {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+</style></head>
+
+  <body class="template-index">
+    <a href="#main" class="visually-hidden">Skip to content</a>
+
+    <div class="frame" aria-hidden="true"><span class="frame__mark frame__mark--bl" data-frame-label></span>
+  <span class="frame__mark frame__mark--br" data-frame-count></span><span class="frame__side frame__side--l">NEOSELF</span>
+  <span class="frame__side frame__side--r">NEOSELF</span><span class="frame__rule frame__rule--b"></span>
+</div>
+
+
+    <div class="announce rule-bottom">
+  <div class="container">
+    <p class="announce__text t-eyebrow">
+      Free shipping on orders over ₹1,000
+    </p>
+  </div>
+</div>
+
+
+
+
+
+    <header class="header" data-header>
+  <div class="container header__inner">
+    <button
+      class="header__burger"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="site-menu"
+      data-nav-toggle
+    >
+      <span></span><span></span>
+    </button>
+
+    <a href="/neoself-v3-preview/" class="header__logo" aria-label="NEOSELF home">
+      <span class="logo " aria-hidden="true">neoself</span>
+
+    </a>
+
+    <a href="/neoself-v3-preview/cart" class="header__link t-eyebrow header__cart">
+      Cart<span class="t-mono">&nbsp;(0)</span>
+    </a>
+  </div>
+
+  <div class="header__mobile" id="site-menu" hidden data-mobile-nav>
+    <nav class="container header__mobile-inner" aria-label="Menu"><a href="/neoself-v3-preview/products/the-system" class="header__mobile-link t-heading">The System</a><a href="/neoself-v3-preview/collections/all" class="header__mobile-link t-heading">The Line</a><a href="/neoself-v3-preview/pages/science" class="header__mobile-link t-heading">The Science</a><a href="/neoself-v3-preview/cart" class="header__mobile-link t-heading">Cart (0)</a>
+    </nav>
+  </div>
+</header>
+
+
+
+
+
+
+    <main id="main"><section class="hero hero--inset" data-doc-section="COVER">
+  <div class="container hero__frame"><div class="hero__plate"><picture>
+      <source
+        media="(min-width: 768px)"
+        srcset="/neoself-v3-preview/media/hero.jpg"
+        width="1600"
+        height="900"
+      >
+      <img
+        class="hero__media"
+        src="/neoself-v3-preview/media/hero-mobile.jpg"
+        alt=""
+        width="900"
+        height="1600"
+        fetchpriority="high"
+        decoding="async"
+      >
+    </picture>
+    <div class="hero__scrim" aria-hidden="true"></div><div class="hero__inner">
+    <div class="hero__content"><p class="hero__eyebrow t-eyebrow">EST. 2026 · THE SCIENCE OF SELF</p><h1 class="t-hero hero__line">Proof over promise.</h1><p class="hero__body">Every active at the concentration we actually used. Every trial published with its sample size.</p><a href="/neoself-v3-preview/products/the-system" class="pill hero__cta">
+        See the evidence
+      </a>
+    </div>
+  </div>
+  </div></div>
+</section>
+
+
+
+
+
+<section class="section the-system" data-doc-section="THE SYSTEM">
+  <div class="container"><div class="the-system__bar">
+      <button class="carousel__btn" type="button" data-carousel-prev aria-label="Previous">
+        <span aria-hidden="true">&#8592;</span>
+      </button>
+      <button class="carousel__btn" type="button" data-carousel-next aria-label="Next">
+        <span aria-hidden="true">&#8594;</span>
+      </button>
+    </div>
+
+    <ol class="the-system__seq" data-carousel><li class="the-system__item">
+            <div class="card" data-card-hover>
+  <a href="/neoself-v3-preview/products/clean" class="card__link" aria-label="CLEAN" draggable="false">
+    <div class="card__media"><img
+          src="/neoself-v3-preview/media/product.jpg"
+          alt="CLEAN"
+          width="800"
+          height="1000"
+          loading="lazy"
+          decoding="async"
+          draggable="false"
+        ><span
+          class="card__hover"
+          style="--hover-src: url('/media/model.jpg')"
+          aria-hidden="true"
+        ></span><span class="card__scrim" aria-hidden="true"></span>
+
+      <div class="card__info">
+        <span class="card__name">CLEAN</span>
+        <span class="card__price t-mono">₹450</span>
+      </div>
+    </div>
+  </a>
+
+  <button
+    class="card__atc"
+    type="button"
+    data-atc
+    data-variant="101"
+    aria-label="Add CLEAN to cart"
+  >add to cart</button>
+
+  <div class="card__fill" aria-hidden="true">
+    <span class="card__fill-text">added to cart</span>
+  </div>
+</div>
+
+          </li><li class="the-system__item">
+            <div class="card" data-card-hover>
+  <a href="/neoself-v3-preview/products/repair" class="card__link" aria-label="REPAIR" draggable="false">
+    <div class="card__media"><img
+          src="/neoself-v3-preview/media/product.jpg"
+          alt="REPAIR"
+          width="800"
+          height="1000"
+          loading="lazy"
+          decoding="async"
+          draggable="false"
+        ><span
+          class="card__hover"
+          style="--hover-src: url('/media/model.jpg')"
+          aria-hidden="true"
+        ></span><span class="card__scrim" aria-hidden="true"></span>
+
+      <div class="card__info">
+        <span class="card__name">REPAIR</span>
+        <span class="card__price t-mono">₹850</span>
+      </div>
+    </div>
+  </a>
+
+  <button
+    class="card__atc"
+    type="button"
+    data-atc
+    data-variant="201"
+    aria-label="Add REPAIR to cart"
+  >add to cart</button>
+
+  <div class="card__fill" aria-hidden="true">
+    <span class="card__fill-text">added to cart</span>
+  </div>
+</div>
+
+          </li><li class="the-system__item">
+            <div class="card" data-card-hover>
+  <a href="/neoself-v3-preview/products/defend" class="card__link" aria-label="DEFEND" draggable="false">
+    <div class="card__media"><img
+          src="/neoself-v3-preview/media/product.jpg"
+          alt="DEFEND"
+          width="800"
+          height="1000"
+          loading="lazy"
+          decoding="async"
+          draggable="false"
+        ><span
+          class="card__hover"
+          style="--hover-src: url('/media/model.jpg')"
+          aria-hidden="true"
+        ></span><span class="card__scrim" aria-hidden="true"></span>
+
+      <div class="card__info">
+        <span class="card__name">DEFEND</span>
+        <span class="card__price t-mono">₹700</span>
+      </div>
+    </div>
+  </a>
+
+  <button
+    class="card__atc"
+    type="button"
+    data-atc
+    data-variant="301"
+    aria-label="Add DEFEND to cart"
+  >add to cart</button>
+
+  <div class="card__fill" aria-hidden="true">
+    <span class="card__fill-text">added to cart</span>
+  </div>
+</div>
+
+          </li><li class="the-system__item">
+            <div class="card" data-card-hover>
+  <a href="/neoself-v3-preview/products/the-daily" class="card__link" aria-label="THE DAILY DRIVER" draggable="false">
+    <div class="card__media"><img
+          src="/neoself-v3-preview/media/product.jpg"
+          alt="THE DAILY DRIVER"
+          width="800"
+          height="1000"
+          loading="lazy"
+          decoding="async"
+          draggable="false"
+        ><span
+          class="card__hover"
+          style="--hover-src: url('/media/model.jpg')"
+          aria-hidden="true"
+        ></span><span class="card__scrim" aria-hidden="true"></span>
+
+      <div class="card__info">
+        <span class="card__name">THE DAILY DRIVER</span>
+        <span class="card__price t-mono">₹990</span>
+      </div>
+    </div>
+  </a>
+
+  <button
+    class="card__atc"
+    type="button"
+    data-atc
+    data-variant="501"
+    aria-label="Add THE DAILY DRIVER to cart"
+  >add to cart</button>
+
+  <div class="card__fill" aria-hidden="true">
+    <span class="card__fill-text">added to cart</span>
+  </div>
+</div>
+
+          </li><li class="the-system__item">
+            <div class="card" data-card-hover>
+  <a href="/neoself-v3-preview/products/the-system" class="card__link" aria-label="THE FULL STACK" draggable="false">
+    <div class="card__media"><img
+          src="/neoself-v3-preview/media/product.jpg"
+          alt="THE FULL STACK"
+          width="800"
+          height="1000"
+          loading="lazy"
+          decoding="async"
+          draggable="false"
+        ><span
+          class="card__hover"
+          style="--hover-src: url('/media/model.jpg')"
+          aria-hidden="true"
+        ></span><span class="card__scrim" aria-hidden="true"></span>
+
+      <div class="card__info">
+        <span class="card__name">THE FULL STACK</span>
+        <span class="card__price t-mono">₹1,800</span>
+      </div>
+    </div>
+  </a>
+
+  <button
+    class="card__atc"
+    type="button"
+    data-atc
+    data-variant="401"
+    aria-label="Add THE FULL STACK to cart"
+  >add to cart</button>
+
+  <div class="card__fill" aria-hidden="true">
+    <span class="card__fill-text">added to cart</span>
+  </div>
+</div>
+
+          </li></ol>
+  </div>
+</section>
+
+
+
+
+
+<section class="section surface-evidence evidence" data-doc-section="THE EVIDENCE">
+  <div class="container">
+    <header class="evidence__head">
+      <p class="t-eyebrow t-muted">02 · THE EVIDENCE</p>
+      <h2 class="t-heading">The numbers, and how we got them.</h2><p class="evidence__body prose t-muted">Measured results and reported results are different things. We keep them apart, name the instrument, and print the sample size, including when it is small.</p></header><div class="evidence__tier">
+        <p class="t-data-label evidence__tier-label">Measured</p>
+        <div class="evidence__grid"><figure class="clinical-figure"><div class="t-figure">−37.2%</div>
+    <figcaption class="clinical-figure__caption">
+      <span class="t-data-label">hyperpigmentation index, reduced by</span>
+      <span class="t-data-label">n=32 · 8 weeks · Mexameter MX18</span>
+    </figcaption></figure>
+<figure class="clinical-figure"><div class="t-figure">−19.4%</div>
+    <figcaption class="clinical-figure__caption">
+      <span class="t-data-label">transepidermal water loss, reduced by</span>
+      <span class="t-data-label">n=32 · 8 weeks · Tewameter TM300</span>
+    </figcaption></figure>
+</div>
+      </div>
+
+      <div class="evidence__tier">
+        <p class="t-data-label evidence__tier-label">Reported</p>
+        <div class="evidence__grid"><figure class="clinical-figure"><div class="t-figure">94%</div>
+    <figcaption class="clinical-figure__caption">
+      <span class="t-data-label">agreed tone appeared more even</span>
+      <span class="t-data-label">n=32 · 8 weeks</span>
+    </figcaption></figure>
+</div>
+      </div>
+
+      <p class="evidence__note t-data-label">Independent third-party testing. Measured values are instrument readings against baseline. Reported values are participant responses and are not efficacy measurements.</p></div>
+</section>
+
+
+
+
+
+<section class="section the-spec rule-top" data-doc-section="THE FORMULA">
+  <div class="container">
+    <header class="the-spec__head">
+      <p class="t-eyebrow t-muted">03 · THE FORMULA</p>
+      <h2 class="t-heading">The whole sheet, before you buy.</h2><p class="the-spec__body prose t-muted">Every active at its dose. The pH as a number. The full INCI, not a highlights reel. And the things this should not be used with, because a brand that only tells you when to buy is telling you half of it.</p></header><div class="the-spec__grid">
+        <div class="the-spec__label">
+          <p class="t-eyebrow">REPAIR</p>
+          <p class="t-body-sm t-muted">Vitamin C that earns its 11%.</p>
+          <a href="/neoself-v3-preview/products/repair" class="the-spec__link t-data-label">
+            Full sheet →
+          </a>
+        </div>
+
+        <div class="the-spec__sheet">
+          <dl class="spec"><div class="spec__row">
+      <dt class="t-data-label">Actives</dt>
+      <dd class="spec__value"><span class="t-mono">L-Ascorbic Acid 11%</span><span class="spec__sep">·</span><span class="t-mono">Tocopherol 0.5%</span></dd>
+    </div><div class="spec__row">
+      <dt class="t-data-label">pH</dt>
+      <dd class="spec__value t-mono">3.2 – 3.5</dd>
+    </div><div class="spec__row">
+      <dt class="t-data-label">Size</dt>
+      <dd class="spec__value t-mono">30ml</dd>
+    </div><div class="spec__row">
+      <dt class="t-data-label">Use</dt>
+      <dd class="spec__value t-mono">AM</dd>
+    </div><div class="spec__row spec__row--block">
+      <dt class="t-data-label">INCI, in full</dt>
+      <dd class="spec__value spec__inci t-body-sm t-muted">Aqua, Ascorbic Acid, Propylene Glycol, Glycerin, Tocopherol, Ferulic Acid, Panthenol, Sodium Hyaluronate, Ethoxydiglycol, Sodium Metabisulfite, Phenoxyethanol</dd>
+    </div><div class="spec__row spec__row--block spec__row--conflict">
+      <dt class="t-data-label">Do not use with</dt>
+      <dd class="spec__value">
+        <ul class="spec__conflicts"><li class="t-body-sm">Direct Niacinamide</li><li class="t-body-sm">Retinoids in the same routine step</li></ul>
+      </dd>
+    </div></dl>
+
+        </div>
+      </div></div>
+</section>
+
+
+
+
+
+<section class="section the-case rule-top" data-doc-section="THE OPTIMIZED MAN">
+  <div class="container">
+    <header class="the-case__head">
+      <p class="t-eyebrow t-steel">04 · THE OPTIMIZED MAN</p>
+      <h2 class="the-case__title">You measure everything else.</h2><p class="the-case__body prose">You know your resting heart rate. You know what you lifted last Tuesday. You read the back of the packet before you eat it. Then you buy skincare with no numbers on it at all, because nobody in this aisle will give you any. That was never your fault. It was the category's.</p></header>
+
+    <dl class="the-case__list"><div class="the-case__row">
+          <dt class="the-case__objection">“Skincare isn’t for me.”</dt>
+          <dd class="the-case__answer">You already run a protocol for sleep, for training, for what you eat. This is the same thing for the organ that is on the outside. The only reason it felt like someone else’s aisle is that nobody in it was talking to you.</dd>
+        </div><div class="the-case__row">
+          <dt class="the-case__objection">“I don’t have time for ten steps.”</dt>
+          <dd class="the-case__answer">Neither do we. Three products, one order, about ninety seconds a morning. There is no step four, and we are not planning one.</dd>
+        </div><div class="the-case__row">
+          <dt class="the-case__objection">“I wouldn’t know what to buy.”</dt>
+          <dd class="the-case__answer">That is the point of a system. CLEAN, then REPAIR, then DEFEND. The order is on the box, and each one is formulated for the one after it. There is nothing to research.</dd>
+        </div><div class="the-case__row">
+          <dt class="the-case__objection">“It’s all marketing.”</dt>
+          <dd class="the-case__answer">Usually, yes. So check ours. Every active is printed at the dose we used, the pH is a number, the full INCI is on the page, and every trial is published with its sample size, including the small ones. If we were bluffing, this is where you would catch us.</dd>
+        </div><div class="the-case__row">
+          <dt class="the-case__objection">“What if it does nothing?”</dt>
+          <dd class="the-case__answer">Then the numbers will say so, and they are on the page before you buy. We would rather lose the sale than win it on a promise we cannot show you.</dd>
+        </div></dl>
+  </div>
+</section>
+
+
+
+
+
+<section class="section the-ritual rule-top" data-doc-section="THE RITUAL">
+  <div class="container">
+    <header class="the-ritual__head">
+      <p class="t-eyebrow t-muted">05 · THE RITUAL</p>
+      <h2 class="t-heading">In this order, every morning.</h2>
+    </header>
+
+    <ol class="the-ritual__steps"><li class="the-ritual__step">
+          <div class="the-ritual__mark">
+            <svg class="ritual-mark" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M19 14 C14 22 14 28 19 28 C24 28 24 22 19 14 Z"/>
+      <path d="M30 20 C26.5 25.5 26.5 30 30 30 C33.5 30 33.5 25.5 30 20 Z"/>
+      <path d="M13 37 q6 4 11.5 0 q5.5 -4 11.5 0"/>
+    </svg>
+            <span class="the-ritual__num t-data-label">01</span>
+          </div>
+          <div class="the-ritual__detail">
+            <p class="t-eyebrow">CLEAN</p>
+            <p class="the-ritual__how t-body-sm">Massage into damp skin for 30 seconds. Rinse.</p>
+            <p class="t-data-label">AM and PM</p>
+          </div>
+        </li><li class="the-ritual__step">
+          <div class="the-ritual__mark">
+            <svg class="ritual-mark" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="19" y="7" width="10" height="7" rx="2"/>
+      <path d="M21.5 14 v13 l2.5 4 2.5 -4 V14"/>
+      <path d="M24 34 C21.2 38 21.2 41.5 24 41.5 C26.8 41.5 26.8 38 24 34 Z"/>
+    </svg>
+            <span class="the-ritual__num t-data-label">02</span>
+          </div>
+          <div class="the-ritual__detail">
+            <p class="t-eyebrow">REPAIR</p>
+            <p class="the-ritual__how t-body-sm">Four drops to dry skin after CLEAN. Wait 60 seconds before DEFEND.</p>
+            <p class="t-data-label">AM</p>
+          </div>
+        </li><li class="the-ritual__step">
+          <div class="the-ritual__mark">
+            <svg class="ritual-mark" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="24" cy="22" r="7"/>
+      <line x1="24" y1="10" x2="24" y2="6"/>
+      <line x1="24" y1="10" x2="24" y2="6" transform="rotate(45 24 22)"/>
+      <line x1="24" y1="10" x2="24" y2="6" transform="rotate(90 24 22)"/>
+      <line x1="24" y1="10" x2="24" y2="6" transform="rotate(135 24 22)"/>
+      <line x1="24" y1="10" x2="24" y2="6" transform="rotate(180 24 22)"/>
+      <line x1="24" y1="10" x2="24" y2="6" transform="rotate(225 24 22)"/>
+      <line x1="24" y1="10" x2="24" y2="6" transform="rotate(270 24 22)"/>
+      <line x1="24" y1="10" x2="24" y2="6" transform="rotate(315 24 22)"/>
+    </svg>
+            <span class="the-ritual__num t-data-label">03</span>
+          </div>
+          <div class="the-ritual__detail">
+            <p class="t-eyebrow">DEFEND</p>
+            <p class="the-ritual__how t-body-sm">Two fingers' length to face and neck as the last step. Rub in for a full thirty seconds. Reapply every two hours outdoors.</p>
+            <p class="t-data-label">AM</p>
+          </div>
+        </li></ol>
+  </div>
+</section>
+
+
+
+
+
+<section class="section reviews-section rule-top" data-doc-section="THE RECORD">
+  <div class="container">
+    <header class="reviews-section__head">
+      <p class="t-eyebrow t-muted">06 · WHAT PEOPLE SAID</p>
+      <h2 class="t-heading">Filter to someone like you.</h2><p class="prose t-muted">A stranger's skin tells you very little. Narrow it to your type and age, and read the two-star reviews first. We have not removed them.</p></header><div class="reviews" data-reviews>
+  <div class="reviews__summary">
+    <div class="reviews__score">
+      <span class="reviews__avg t-mono">4.6</span>
+      <span class="t-data-label">87 reviews</span>
+    </div>
+
+    <dl class="reviews__dist"><div class="reviews__dist-row">
+          <dt class="t-data-label">5</dt>
+          <dd class="reviews__bar">
+            <span class="reviews__bar-fill" style="width: 66.66666666666667%"></span>
+          </dd>
+          <dd class="t-data-label reviews__dist-n">58</dd>
+        </div><div class="reviews__dist-row">
+          <dt class="t-data-label">4</dt>
+          <dd class="reviews__bar">
+            <span class="reviews__bar-fill" style="width: 21.839080459770116%"></span>
+          </dd>
+          <dd class="t-data-label reviews__dist-n">19</dd>
+        </div><div class="reviews__dist-row">
+          <dt class="t-data-label">3</dt>
+          <dd class="reviews__bar">
+            <span class="reviews__bar-fill" style="width: 6.896551724137931%"></span>
+          </dd>
+          <dd class="t-data-label reviews__dist-n">6</dd>
+        </div><div class="reviews__dist-row">
+          <dt class="t-data-label">2</dt>
+          <dd class="reviews__bar">
+            <span class="reviews__bar-fill" style="width: 3.4482758620689653%"></span>
+          </dd>
+          <dd class="t-data-label reviews__dist-n">3</dd>
+        </div><div class="reviews__dist-row">
+          <dt class="t-data-label">1</dt>
+          <dd class="reviews__bar">
+            <span class="reviews__bar-fill" style="width: 1.1494252873563218%"></span>
+          </dd>
+          <dd class="t-data-label reviews__dist-n">1</dd>
+        </div></dl>
+  </div>
+
+  <div class="reviews__filters">
+    <p class="t-data-label reviews__filters-label">Filter by reviewer</p>
+    <div class="reviews__filter-groups"><div class="reviews__filter-group">
+        <span class="t-data-label">Skin</span>
+        <div class="reviews__chips">
+          <button class="chip is-active" data-filter="skin" data-value="" type="button">All</button><button class="chip" data-filter="skin" data-value="Oily" type="button">Oily</button><button class="chip" data-filter="skin" data-value="Combination" type="button">Combination</button><button class="chip" data-filter="skin" data-value="Dry" type="button">Dry</button><button class="chip" data-filter="skin" data-value="Normal" type="button">Normal</button><button class="chip" data-filter="skin" data-value="Sensitive" type="button">Sensitive</button></div>
+      </div><div class="reviews__filter-group">
+        <span class="t-data-label">Age</span>
+        <div class="reviews__chips">
+          <button class="chip is-active" data-filter="age" data-value="" type="button">All</button><button class="chip" data-filter="age" data-value="18-24" type="button">18-24</button><button class="chip" data-filter="age" data-value="25-34" type="button">25-34</button><button class="chip" data-filter="age" data-value="35-44" type="button">35-44</button><button class="chip" data-filter="age" data-value="45+" type="button">45+</button></div>
+      </div><div class="reviews__filter-group">
+        <span class="t-data-label">Concern</span>
+        <div class="reviews__chips">
+          <button class="chip is-active" data-filter="concern" data-value="" type="button">All</button><button class="chip" data-filter="concern" data-value="Shaving irritation" type="button">Shaving irritation</button><button class="chip" data-filter="concern" data-value="Razor bumps" type="button">Razor bumps</button><button class="chip" data-filter="concern" data-value="T-zone shine" type="button">T-zone shine</button><button class="chip" data-filter="concern" data-value="Texture" type="button">Texture</button><button class="chip" data-filter="concern" data-value="Blackheads" type="button">Blackheads</button><button class="chip" data-filter="concern" data-value="Sun damage" type="button">Sun damage</button><button class="chip" data-filter="concern" data-value="Early lines" type="button">Early lines</button></div>
+      </div>
+    </div>
+    <p class="t-data-label reviews__count" data-review-count hidden></p>
+  </div>
+
+  <ol class="reviews__list" data-review-list><li
+        class="review"
+        data-skin="Combination"
+        data-age="25-34"
+        data-concern="Sun damage"
+      >
+        <div class="review__meta">
+          <span class="review__stars t-mono" aria-label="5 out of 5">★★★★★</span>
+          <span class="t-data-label">Aditya N.</span><span class="t-data-label review__verified">Verified purchase</span></div>
+
+        <p class="review__body">Eight weeks in and the marks along my jaw from old breakouts have genuinely faded. Not gone. Faded. I appreciate that the site said 8 weeks and it took 8 weeks.</p>
+
+        <p class="review__attrs t-data-label">
+          Combination · 25-34 · Sun damage
+        </p>
+      </li><li
+        class="review"
+        data-skin="Normal"
+        data-age="35-44"
+        data-concern="Early lines"
+      >
+        <div class="review__meta">
+          <span class="review__stars t-mono" aria-label="4 out of 5">★★★★☆</span>
+          <span class="t-data-label">Nikhil B.</span><span class="t-data-label review__verified">Verified purchase</span></div>
+
+        <p class="review__body">Works. Oxidises faster than I would like once opened. Went slightly amber around week ten. Keep it away from the window.</p>
+
+        <p class="review__attrs t-data-label">
+          Normal · 35-44 · Early lines
+        </p>
+      </li><li
+        class="review"
+        data-skin="Sensitive"
+        data-age="25-34"
+        data-concern="Shaving irritation"
+      >
+        <div class="review__meta">
+          <span class="review__stars t-mono" aria-label="3 out of 5">★★★☆☆</span>
+          <span class="t-data-label">Siddharth P.</span><span class="t-data-label review__verified">Verified purchase</span></div>
+
+        <p class="review__body">Stings for about thirty seconds if I put it on the same morning I shave. Manageable but real. I now use it on non-shave days only.</p>
+
+        <p class="review__attrs t-data-label">
+          Sensitive · 25-34 · Shaving irritation
+        </p>
+      </li><li
+        class="review"
+        data-skin="Oily"
+        data-age="18-24"
+        data-concern="Texture"
+      >
+        <div class="review__meta">
+          <span class="review__stars t-mono" aria-label="5 out of 5">★★★★★</span>
+          <span class="t-data-label">Farhan A.</span><span class="t-data-label review__verified">Verified purchase</span></div>
+
+        <p class="review__body">The fact that the pH is printed on the box is why I bought it. Most brands will not tell you.</p>
+
+        <p class="review__attrs t-data-label">
+          Oily · 18-24 · Texture
+        </p>
+      </li><li
+        class="review"
+        data-skin="Sensitive"
+        data-age="45+"
+        data-concern="Razor bumps"
+      >
+        <div class="review__meta">
+          <span class="review__stars t-mono" aria-label="2 out of 5">★★☆☆☆</span>
+          <span class="t-data-label">Tanmay G.</span><span class="t-data-label review__verified">Verified purchase</span></div>
+
+        <p class="review__body">My skin could not tolerate 11%. That is on me, not the product, but be honest with yourself about sensitivity before ordering.</p>
+
+        <p class="review__attrs t-data-label">
+          Sensitive · 45+ · Razor bumps
+        </p>
+      </li></ol>
+
+  <p class="reviews__empty t-body-sm t-muted" data-review-empty hidden>
+    No reviews from this group yet. That is what the filter found, not a gap we chose.
+  </p>
+
+  <p class="reviews__policy t-data-label">
+    We publish every review we receive, including the ones below. Reviews are
+    removed only for spam, personal information, or being unrelated to the
+    product. Never for what they say about it.
+  </p>
+</div>
+</div>
+</section>
+
+
+
+
+</main>
+
+    <footer class="footer rule-top">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <span class="logo " aria-hidden="true">neoself</span>
+
+      <p class="footer__tagline t-body-sm t-muted">Skincare, Engineered.</p>
+    </div><div class="footer__col">
+        <h2 class="t-data-label">The line</h2>
+        <ul class="footer__list"><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">The System</a>
+            </li><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">CLEAN</a>
+            </li><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">REPAIR</a>
+            </li><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">DEFEND</a>
+            </li></ul>
+      </div><div class="footer__col">
+        <h2 class="t-data-label">Evidence</h2>
+        <ul class="footer__list"><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">The Science</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Our trials</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Ingredient index</a>
+            </li></ul>
+      </div><div class="footer__col">
+        <h2 class="t-data-label">Support</h2>
+        <ul class="footer__list"><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Shipping</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Returns</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Contact</a>
+            </li></ul>
+      </div></div>
+
+  <div class="footer__wordmark" aria-hidden="true">NEOSELF</div>
+
+  <div class="container footer__base rule-top">
+    <p class="t-data-label">© 2026 NEOSELF</p>
+    <p class="t-data-label">IND · EST 2026 · MADE IN INDIA</p>
+  </div>
+</footer>
+
+
+
+
+
+
+    <script src="/neoself-v3-preview/assets/theme.js" defer></script>
+  </body>
+</html>

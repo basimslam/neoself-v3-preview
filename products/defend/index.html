@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f5f6">
+
+    <title>DEFEND · NEOSELF</title>
+    <meta name="description" content="Weightless mineral SPF 30."><link rel="preload" href="/neoself-v3-preview/assets/geist-sans.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/neoself-v3-preview/assets/base.css"><script type="speculationrules">
+      {
+        "prefetch": [
+          {
+            "where": { "href_matches": "/products/*" },
+            "eagerness": "moderate"
+          },
+          {
+            "where": { "href_matches": "/collections/*" },
+            "eagerness": "moderate"
+          }
+        ]
+      }
+    </script>
+  <style>
+.pdp__top {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr;
+  padding-top: 16px;
+  padding-bottom: var(--rhythm);
+}
+
+/* --- buy block --- */
+
+/* Tight on purpose. Every 10px here is 10px of the add-to-cart's clearance on a
+   360x800 Redmi, where it had 15px to spare — inside the noise of a browser URL
+   bar. A considered buy block and a reachable button want the same thing. */
+.pdp__buy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.pdp__title {
+  margin-top: 2px;
+}
+
+.pdp__subtitle {
+  color: var(--steel);
+}
+
+.pdp__dose {
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.pdp__rating {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-block: 4px;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.pdp__rating:hover {
+  opacity: 0.55;
+}
+
+.pdp__price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--silver);
+  width: 100%;
+}
+
+.pdp__price {
+  font-size: 20px;
+}
+
+.pdp__form {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.pdp__atc {
+  width: 100%;
+  text-align: center;
+}
+
+.pdp__ship {
+  margin-top: 4px;
+}
+
+/* --- sections --- */
+
+.pdp__section-label {
+  margin-bottom: 28px;
+}
+
+.pdp__evidence {
+  padding-block: var(--rhythm);
+}
+
+.pdp__tier {
+  padding-top: 28px;
+  border-top: 1px solid var(--silver);
+  margin-bottom: 36px;
+}
+
+.pdp__tier-label {
+  margin-bottom: 24px;
+  color: var(--ink);
+}
+
+.pdp__figures {
+  display: grid;
+  gap: 36px;
+  grid-template-columns: 1fr;
+}
+
+.pdp__method {
+  padding-top: 24px;
+  border-top: 1px solid var(--silver);
+  max-width: 70ch;
+}
+
+.pdp__spec,
+.pdp__how,
+.pdp__next,
+.pdp__reviews {
+  padding-block: var(--rhythm);
+}
+
+.pdp__how-text {
+  max-width: 55ch;
+  margin-bottom: 8px;
+}
+
+.pdp__next-card {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 20px;
+  align-items: center;
+  max-width: 460px;
+}
+
+.pdp__next-media {
+  aspect-ratio: 4 / 5;
+  background: var(--surface);
+  overflow: hidden;
+  border-radius: calc(var(--radius-media) / 2);
+}
+
+.pdp__next-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 700ms var(--ease);
+}
+
+.pdp__next-card:hover .pdp__next-media img {
+  transform: scale(1.03);
+}
+
+.pdp__next-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pdp__next-price {
+  font-size: 13px;
+  color: var(--steel);
+  margin-top: 4px;
+}
+
+/* --- mobile buy bar --- */
+
+.buybar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  background: rgb(244 245 246 / 0.97);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--silver);
+  transform: translateY(100%);
+  transition: transform var(--dur) var(--ease);
+}
+
+.buybar[data-visible] {
+  transform: translateY(0);
+}
+
+.buybar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px var(--gutter);
+}
+
+.buybar__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.buybar__price {
+  font-size: 13px;
+  color: var(--steel);
+}
+
+.buybar__atc {
+  padding: 12px 24px;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  /* Capped well inside the 1440 container. At full width a 4:5 gallery runs
+     ~900px tall and leaves a void beside the buy block, which is short by
+     design — everything needed to decide and nothing else. */
+  .pdp__top {
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    padding-top: 48px;
+    max-width: 1120px;
+    margin-inline: auto;
+  }
+
+  .pdp__buy {
+    position: sticky;
+    top: 32px;
+    align-self: start;
+  }
+
+  .pdp__figures {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px;
+  }
+
+  .pdp__next-card {
+    grid-template-columns: 120px 1fr;
+  }
+
+  /* Desktop keeps the real button in a sticky column; the drawer is a mobile
+     answer to a mobile problem. */
+  .buybar {
+    display: none;
+  }
+}
+
+
+/* v3: a silver band — the bottles' accent, up top. */
+.announce {
+  background: var(--silver);
+}
+
+.announce__text {
+  padding-block: 13px;
+  text-align: center;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  margin-bottom: -64px;
+  border-bottom: 1px solid transparent;
+  transition:
+    color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    transform 460ms cubic-bezier(0.34, 1.5, 0.5, 1);
+}
+
+/* Hidden on scroll-down; the bounce is in the transform easing. */
+.header.is-hidden {
+  transform: translateY(-100%);
+}
+
+.header__inner {
+  height: 64px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.header__burger {
+  grid-column: 1;
+  justify-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  align-items: flex-start;
+  margin-left: -8px;
+}
+
+.header__burger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: currentColor;
+  transition:
+    transform var(--dur) var(--ease),
+    opacity var(--dur) var(--ease);
+}
+
+.nav-open .header__burger span:first-child {
+  transform: translateY(3px) rotate(45deg);
+}
+
+.nav-open .header__burger span:last-child {
+  transform: translateY(-3px) rotate(-45deg);
+}
+
+.header__logo {
+  grid-column: 2;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+  color: currentColor;
+}
+
+.header__cart {
+  grid-column: 3;
+  justify-self: end;
+}
+
+.header__link {
+  transition: opacity var(--dur) var(--ease);
+}
+
+.header__link:hover {
+  opacity: 0.55;
+}
+
+/* Ink marks throughout; a paper field with a hairline appears once scrolled. */
+.header {
+  color: var(--ink);
+}
+
+.header.is-scrolled {
+  background: var(--paper);
+  border-bottom-color: var(--silver);
+}
+
+/* The menu panel, used at every width. */
+.header__mobile {
+  background: var(--paper);
+  border-top: 1px solid var(--silver);
+}
+
+.header__mobile-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-block: 32px;
+}
+
+.header__mobile-link {
+  color: var(--ink);
+  transition: opacity var(--dur) var(--ease);
+}
+
+.header__mobile-link:hover {
+  opacity: 0.55;
+}
+
+
+.footer {
+  background: var(--paper);
+}
+
+.footer__inner {
+  padding-block: var(--rhythm);
+  display: grid;
+  gap: 40px;
+  grid-template-columns: 1fr;
+}
+
+.footer__tagline {
+  margin-top: 14px;
+  max-width: 34ch;
+}
+
+.footer__list {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer__link {
+  transition: opacity var(--dur) var(--ease);
+}
+
+.footer__link:hover {
+  opacity: 0.55;
+}
+
+/* The brand at scale, closing the page. Clipped to the viewport width so it
+   fills edge to edge without causing horizontal scroll. */
+.footer__wordmark {
+  font-size: 20vw;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  text-transform: lowercase;
+  text-align: center;
+  color: var(--ink);
+  overflow: hidden;
+  padding-top: 24px;
+  user-select: none;
+  transform: scale(0.8);
+  transform-origin: bottom center;
+  transition: transform 900ms var(--ease);
+}
+
+/* Grows to full size as it enters view (theme.js toggles is-in). */
+.footer__wordmark.is-in {
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer__wordmark {
+    transition: none;
+    transform: none;
+  }
+}
+
+.footer__base {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-block: 24px;
+}
+
+@media (min-width: 768px) {
+  .footer__inner {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+
+  .footer__base {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+</style></head>
+
+  <body class="template-product">
+    <a href="#main" class="visually-hidden">Skip to content</a>
+
+    <div class="frame" aria-hidden="true"><span class="frame__mark frame__mark--bl" data-frame-label></span>
+  <span class="frame__mark frame__mark--br" data-frame-count></span><span class="frame__side frame__side--l">NEOSELF</span>
+  <span class="frame__side frame__side--r">NEOSELF</span><span class="frame__rule frame__rule--b"></span>
+</div>
+
+
+    <div class="announce rule-bottom">
+  <div class="container">
+    <p class="announce__text t-eyebrow">
+      Free shipping on orders over ₹1,000
+    </p>
+  </div>
+</div>
+
+
+
+
+
+    <header class="header" data-header>
+  <div class="container header__inner">
+    <button
+      class="header__burger"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="site-menu"
+      data-nav-toggle
+    >
+      <span></span><span></span>
+    </button>
+
+    <a href="/neoself-v3-preview/" class="header__logo" aria-label="NEOSELF home">
+      <span class="logo " aria-hidden="true">neoself</span>
+
+    </a>
+
+    <a href="/neoself-v3-preview/cart" class="header__link t-eyebrow header__cart">
+      Cart<span class="t-mono">&nbsp;(0)</span>
+    </a>
+  </div>
+
+  <div class="header__mobile" id="site-menu" hidden data-mobile-nav>
+    <nav class="container header__mobile-inner" aria-label="Menu"><a href="/neoself-v3-preview/products/the-system" class="header__mobile-link t-heading">The System</a><a href="/neoself-v3-preview/collections/all" class="header__mobile-link t-heading">The Line</a><a href="/neoself-v3-preview/pages/science" class="header__mobile-link t-heading">The Science</a><a href="/neoself-v3-preview/cart" class="header__mobile-link t-heading">Cart (0)</a>
+    </nav>
+  </div>
+</header>
+
+
+
+
+
+
+    <main id="main"><section class="pdp">
+  <div class="container pdp__top" data-doc-section="THE OBJECT">
+    <div class="pdp__gallery">
+      <div class="gallery" data-gallery>
+  <div class="gallery__main"><figure class="gallery__frame is-active" data-gallery-frame="0">
+        <img
+          src="/neoself-v3-preview/media/product.jpg"
+          alt="DEFEND"
+          width="1200"
+          height="1500"
+          fetchpriority="high"
+          decoding="async"
+        >
+      </figure><figure class="gallery__frame" data-gallery-frame="1">
+        <img
+          src="/neoself-v3-preview/media/macro.jpg"
+          alt="DEFEND texture"
+          width="1200"
+          height="1500"
+          loading="lazy"
+          decoding="async"
+        >
+      </figure><figure class="gallery__frame" data-gallery-frame="2">
+        <img
+          src="/neoself-v3-preview/media/model.jpg"
+          alt="DEFEND in use"
+          width="1200"
+          height="1500"
+          loading="lazy"
+          decoding="async"
+        >
+      </figure></div><div class="gallery__thumbs" role="tablist" aria-label="Product images"><button
+          class="gallery__thumb is-active"
+          data-gallery-thumb="0"
+          role="tab"
+          type="button"
+          aria-selected="true"
+          aria-label="DEFEND"
+        >
+          <img
+            src="/neoself-v3-preview/media/product.jpg"
+            alt=""
+            width="200"
+            height="250"
+            loading="lazy"
+            decoding="async"
+          >
+        </button><button
+          class="gallery__thumb"
+          data-gallery-thumb="1"
+          role="tab"
+          type="button"
+          aria-selected="false"
+          aria-label="DEFEND texture"
+        >
+          <img
+            src="/neoself-v3-preview/media/macro.jpg"
+            alt=""
+            width="200"
+            height="250"
+            loading="lazy"
+            decoding="async"
+          >
+        </button><button
+          class="gallery__thumb"
+          data-gallery-thumb="2"
+          role="tab"
+          type="button"
+          aria-selected="false"
+          aria-label="DEFEND in use"
+        >
+          <img
+            src="/neoself-v3-preview/media/model.jpg"
+            alt=""
+            width="200"
+            height="250"
+            loading="lazy"
+            decoding="async"
+          >
+        </button></div></div>
+
+    </div><div class="pdp__buy"><p class="t-data-label">Step 03 of the system</p><h1 class="pdp__title t-heading">DEFEND</h1>
+      <p class="pdp__subtitle">Weightless mineral SPF 30.</p><p class="pdp__dose t-mono">Zinc Oxide 14.5%</p><a href="#reviews" class="pdp__rating">
+          <span class="t-mono">4.3</span>
+          <span class="t-data-label">63 reviews</span>
+        </a><div class="pdp__price-row">
+        <span class="pdp__price t-mono">₹700</span>
+        <span class="t-data-label">50ml</span>
+      </div>
+
+      <form method="post" action="/neoself-v3-preview/cart/add" class="pdp__form">
+        <input type="hidden" name="id" value="301">
+        <button type="submit" class="pill pill--solid pdp__atc" >Add to cart</button>
+      </form>
+
+      <p class="pdp__ship t-data-label">
+        Free shipping over ₹1,000 · Dispatched in 2 working days
+      </p>
+    </div>
+  </div><div class="surface-evidence pdp__evidence" data-doc-section="THE EVIDENCE">
+      <div class="container">
+        <p class="t-eyebrow t-muted pdp__section-label">The evidence</p>
+
+        <div class="pdp__tier">
+          <p class="t-data-label pdp__tier-label">Measured</p>
+          <div class="pdp__figures"><figure class="clinical-figure"><div class="t-figure">−41.8%</div>
+    <figcaption class="clinical-figure__caption">
+      <span class="t-data-label">UV-induced erythema, reduced by</span>
+      <span class="t-data-label">n=28 · 4 weeks · Chromameter CR400</span>
+    </figcaption></figure>
+</div>
+        </div>
+
+        <div class="pdp__tier">
+          <p class="t-data-label pdp__tier-label">Reported</p>
+          <div class="pdp__figures"><figure class="clinical-figure"><div class="t-figure">91%</div>
+    <figcaption class="clinical-figure__caption">
+      <span class="t-data-label">agreed it left no visible cast after thirty seconds</span>
+      <span class="t-data-label">n=28 · 4 weeks</span>
+    </figcaption></figure>
+</div>
+        </div>
+
+        <p class="pdp__method t-data-label">
+          Independent third-party testing. Measured values are instrument readings
+          against baseline. Reported values are participant responses and are not
+          efficacy measurements.
+        </p>
+      </div>
+    </div><div class="container pdp__spec" data-doc-section="THE FORMULA">
+    <p class="t-eyebrow t-muted pdp__section-label">The formula</p>
+    <dl class="spec"><div class="spec__row">
+      <dt class="t-data-label">Active</dt>
+      <dd class="spec__value"><span class="t-mono">Zinc Oxide 14.5%</span></dd>
+    </div><div class="spec__row">
+      <dt class="t-data-label">pH</dt>
+      <dd class="spec__value t-mono">6 – 6.4</dd>
+    </div><div class="spec__row">
+      <dt class="t-data-label">Size</dt>
+      <dd class="spec__value t-mono">50ml</dd>
+    </div><div class="spec__row">
+      <dt class="t-data-label">Use</dt>
+      <dd class="spec__value t-mono">AM</dd>
+    </div><div class="spec__row spec__row--block">
+      <dt class="t-data-label">INCI, in full</dt>
+      <dd class="spec__value spec__inci t-body-sm t-muted">Aqua, Zinc Oxide, Caprylic/Capric Triglyceride, Niacinamide, Glycerin, Silica, Squalane, Isododecane, Tocopherol, Xanthan Gum, Phenoxyethanol</dd>
+    </div></dl>
+
+  </div><div class="container pdp__how rule-top" data-doc-section="HOW TO USE">
+      <p class="t-eyebrow t-muted pdp__section-label">How to use</p>
+      <p class="pdp__how-text">Two fingers' length to face and neck as the last step. Rub in for a full thirty seconds. Reapply every two hours outdoors.</p>
+      <p class="t-data-label">AM</p>
+    </div><div class="container pdp__reviews rule-top" id="reviews" data-doc-section="THE RECORD">
+      <p class="t-eyebrow t-muted pdp__section-label">What people said</p>
+      <div class="reviews" data-reviews>
+  <div class="reviews__summary">
+    <div class="reviews__score">
+      <span class="reviews__avg t-mono">4.3</span>
+      <span class="t-data-label">63 reviews</span>
+    </div>
+
+    <dl class="reviews__dist"><div class="reviews__dist-row">
+          <dt class="t-data-label">5</dt>
+          <dd class="reviews__bar">
+            <span class="reviews__bar-fill" style="width: 50.79365079365079%"></span>
+          </dd>
+          <dd class="t-data-label reviews__dist-n">32</dd>
+        </div><div class="reviews__dist-row">
+          <dt class="t-data-label">4</dt>
+          <dd class="reviews__bar">
+            <span class="reviews__bar-fill" style="width: 28.571428571428573%"></span>
+          </dd>
+          <dd class="t-data-label reviews__dist-n">18</dd>
+        </div><div class="reviews__dist-row">
+          <dt class="t-data-label">3</dt>
+          <dd class="reviews__bar">
+            <span class="reviews__bar-fill" style="width: 12.698412698412698%"></span>
+          </dd>
+          <dd class="t-data-label reviews__dist-n">8</dd>
+        </div><div class="reviews__dist-row">
+          <dt class="t-data-label">2</dt>
+          <dd class="reviews__bar">
+            <span class="reviews__bar-fill" style="width: 4.761904761904762%"></span>
+          </dd>
+          <dd class="t-data-label reviews__dist-n">3</dd>
+        </div><div class="reviews__dist-row">
+          <dt class="t-data-label">1</dt>
+          <dd class="reviews__bar">
+            <span class="reviews__bar-fill" style="width: 3.1746031746031744%"></span>
+          </dd>
+          <dd class="t-data-label reviews__dist-n">2</dd>
+        </div></dl>
+  </div>
+
+  <div class="reviews__filters">
+    <p class="t-data-label reviews__filters-label">Filter by reviewer</p>
+    <div class="reviews__filter-groups"><div class="reviews__filter-group">
+        <span class="t-data-label">Skin</span>
+        <div class="reviews__chips">
+          <button class="chip is-active" data-filter="skin" data-value="" type="button">All</button><button class="chip" data-filter="skin" data-value="Oily" type="button">Oily</button><button class="chip" data-filter="skin" data-value="Combination" type="button">Combination</button><button class="chip" data-filter="skin" data-value="Dry" type="button">Dry</button><button class="chip" data-filter="skin" data-value="Normal" type="button">Normal</button><button class="chip" data-filter="skin" data-value="Sensitive" type="button">Sensitive</button></div>
+      </div><div class="reviews__filter-group">
+        <span class="t-data-label">Age</span>
+        <div class="reviews__chips">
+          <button class="chip is-active" data-filter="age" data-value="" type="button">All</button><button class="chip" data-filter="age" data-value="18-24" type="button">18-24</button><button class="chip" data-filter="age" data-value="25-34" type="button">25-34</button><button class="chip" data-filter="age" data-value="35-44" type="button">35-44</button><button class="chip" data-filter="age" data-value="45+" type="button">45+</button></div>
+      </div><div class="reviews__filter-group">
+        <span class="t-data-label">Concern</span>
+        <div class="reviews__chips">
+          <button class="chip is-active" data-filter="concern" data-value="" type="button">All</button><button class="chip" data-filter="concern" data-value="Shaving irritation" type="button">Shaving irritation</button><button class="chip" data-filter="concern" data-value="Razor bumps" type="button">Razor bumps</button><button class="chip" data-filter="concern" data-value="T-zone shine" type="button">T-zone shine</button><button class="chip" data-filter="concern" data-value="Texture" type="button">Texture</button><button class="chip" data-filter="concern" data-value="Blackheads" type="button">Blackheads</button><button class="chip" data-filter="concern" data-value="Sun damage" type="button">Sun damage</button><button class="chip" data-filter="concern" data-value="Early lines" type="button">Early lines</button></div>
+      </div>
+    </div>
+    <p class="t-data-label reviews__count" data-review-count hidden></p>
+  </div>
+
+  <ol class="reviews__list" data-review-list><li
+        class="review"
+        data-skin="Combination"
+        data-age="25-34"
+        data-concern="Sun damage"
+      >
+        <div class="review__meta">
+          <span class="review__stars t-mono" aria-label="5 out of 5">★★★★★</span>
+          <span class="t-data-label">Kabir J.</span><span class="t-data-label review__verified">Verified purchase</span></div>
+
+        <p class="review__body">Almost no white cast on my skin tone, which is the whole reason I stopped using mineral sunscreens. Finish is matte, almost powdery. It does not look like I am wearing anything.</p>
+
+        <p class="review__attrs t-data-label">
+          Combination · 25-34 · Sun damage
+        </p>
+      </li><li
+        class="review"
+        data-skin="Dry"
+        data-age="35-44"
+        data-concern="Sun damage"
+      >
+        <div class="review__meta">
+          <span class="review__stars t-mono" aria-label="3 out of 5">★★★☆☆</span>
+          <span class="t-data-label">Devansh L.</span><span class="t-data-label review__verified">Verified purchase</span></div>
+
+        <p class="review__body">There is a slight cast for the first minute or two on my skin, then it settles. Worth knowing if you are darker. Rub it in longer than you think.</p>
+
+        <p class="review__attrs t-data-label">
+          Dry · 35-44 · Sun damage
+        </p>
+      </li><li
+        class="review"
+        data-skin="Oily"
+        data-age="18-24"
+        data-concern="T-zone shine"
+      >
+        <div class="review__meta">
+          <span class="review__stars t-mono" aria-label="4 out of 5">★★★★☆</span>
+          <span class="t-data-label">Ishaan V.</span><span class="t-data-label review__verified">Verified purchase</span></div>
+
+        <p class="review__body">SPF 30 not 50, so know what you are buying. For daily indoor-outdoor it is plenty and it does not run into my eyes at the gym.</p>
+
+        <p class="review__attrs t-data-label">
+          Oily · 18-24 · T-zone shine
+        </p>
+      </li><li
+        class="review"
+        data-skin="Sensitive"
+        data-age="25-34"
+        data-concern="Razor bumps"
+      >
+        <div class="review__meta">
+          <span class="review__stars t-mono" aria-label="1 out of 5">★☆☆☆☆</span>
+          <span class="t-data-label">Aman T.</span><span class="t-data-label review__verified">Verified purchase</span></div>
+
+        <p class="review__body">Broke me out along the jaw within a week, right where I shave. Returned it. Support was quick about the refund, to be fair.</p>
+
+        <p class="review__attrs t-data-label">
+          Sensitive · 25-34 · Razor bumps
+        </p>
+      </li></ol>
+
+  <p class="reviews__empty t-body-sm t-muted" data-review-empty hidden>
+    No reviews from this group yet. That is what the filter found, not a gap we chose.
+  </p>
+
+  <p class="reviews__policy t-data-label">
+    We publish every review we receive, including the ones below. Reviews are
+    removed only for spam, personal information, or being unrelated to the
+    product. Never for what they say about it.
+  </p>
+</div>
+
+    </div></section><div class="buybar" data-buybar hidden>
+  <div class="buybar__inner">
+    <div class="buybar__meta">
+      <span class="t-eyebrow">DEFEND</span>
+      <span class="t-mono buybar__price">₹700</span>
+    </div>
+    <form method="post" action="/neoself-v3-preview/cart/add">
+      <input type="hidden" name="id" value="301">
+      <button type="submit" class="pill pill--solid buybar__atc">Add to cart</button>
+    </form>
+  </div>
+</div>
+
+
+
+
+</main>
+
+    <footer class="footer rule-top">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <span class="logo " aria-hidden="true">neoself</span>
+
+      <p class="footer__tagline t-body-sm t-muted">Skincare, Engineered.</p>
+    </div><div class="footer__col">
+        <h2 class="t-data-label">The line</h2>
+        <ul class="footer__list"><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">The System</a>
+            </li><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">CLEAN</a>
+            </li><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">REPAIR</a>
+            </li><li>
+              <a href="/neoself-v3-preview/collections/all" class="footer__link t-body-sm">DEFEND</a>
+            </li></ul>
+      </div><div class="footer__col">
+        <h2 class="t-data-label">Evidence</h2>
+        <ul class="footer__list"><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">The Science</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Our trials</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Ingredient index</a>
+            </li></ul>
+      </div><div class="footer__col">
+        <h2 class="t-data-label">Support</h2>
+        <ul class="footer__list"><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Shipping</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Returns</a>
+            </li><li>
+              <a href="/neoself-v3-preview/pages/science" class="footer__link t-body-sm">Contact</a>
+            </li></ul>
+      </div></div>
+
+  <div class="footer__wordmark" aria-hidden="true">NEOSELF</div>
+
+  <div class="container footer__base rule-top">
+    <p class="t-data-label">© 2026 NEOSELF</p>
+    <p class="t-data-label">IND · EST 2026 · MADE IN INDIA</p>
+  </div>
+</footer>
+
+
+
+
+
+
+    <script src="/neoself-v3-preview/assets/theme.js" defer></script>
+  </body>
+</html>
